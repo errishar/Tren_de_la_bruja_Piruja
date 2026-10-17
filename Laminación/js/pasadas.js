@@ -5,17 +5,17 @@ const n_puntos = 40;
 // 1. Base de datos para luces y factores de transformación por palanquilla
 export function luces_R_palanquilla() {
     const luces_BDM = [
-        { palanquilla: 130, pasadas: [ { id: "AH", Valor_luz: 10, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 5 } ],},
-        { palanquilla: 140, pasadas: [ { id: "AH", Valor_luz: 10, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 5 } ],},
-        { palanquilla: 150, pasadas: [ { id: "AH", Valor_luz: 10, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 5 } ],},
-        { palanquilla: 160, pasadas: [ { id: "AH", Valor_luz: 10, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 5 } ] }
+        { palanquilla: 130, pasadas: [ { id: "AH", Valor_luz: 13.1, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 13.2, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 13.3, max_R_nom: 400, min_R_nom: 100 } ],},
+        { palanquilla: 140, pasadas: [ { id: "AH", Valor_luz: 14.1, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 14.2, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 14.3, max_R_nom: 400, min_R_nom: 100 } ],},
+        { palanquilla: 150, pasadas: [ { id: "AH", Valor_luz: 15.1, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 15.2, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 15.3, max_R_nom: 400, min_R_nom: 100 } ],},
+        { palanquilla: 160, pasadas: [ { id: "AH", Valor_luz: 16.1, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 16.2, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 16.3, max_R_nom: 400, min_R_nom: 100  } ] }
     ];
 
     const R_BDM = [ 
-        { palanquilla: 130, pasadas: [ { id: "AH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.5 } ],},
-        { palanquilla: 140, pasadas: [ { id: "AH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.5 } ],},
-        { palanquilla: 150, pasadas: [ { id: "AH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.5 } ],},
-        { palanquilla: 160, pasadas: [ { id: "AH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.5 } ] }
+        { palanquilla: 130, pasadas: [ { id: "AH", R_transfor: 1.3, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.3, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.3, max_R_nom: 400, min_R_nom: 100  } ],},
+        { palanquilla: 140, pasadas: [ { id: "AH", R_transfor: 1.4, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.4, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.4, max_R_nom: 400, min_R_nom: 100 } ],},
+        { palanquilla: 150, pasadas: [ { id: "AH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 } ],},
+        { palanquilla: 160, pasadas: [ { id: "AH", R_transfor: 1.6, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.6, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.6, max_R_nom: 400, min_R_nom: 100 } ] }
     ];
 
     const radioSeleccionado = document.querySelector('input[name="palanquilla"]:checked');
@@ -39,7 +39,6 @@ export let pasadas_55 = [];
 export function generarPasadas55() {
     const datosBDM = luces_R_palanquilla();
 
-    // Buscamos los valores específicos para AH, BH y CV en la base de datos obtenida
     const luzAH = datosBDM.luces.find(p => p.id === "AH")?.Valor_luz ?? 10;
     const rTransAH = datosBDM.R.find(p => p.id === "AH")?.R_transfor ?? 1.5;
 
@@ -49,9 +48,8 @@ export function generarPasadas55() {
     const luzCV = datosBDM.luces.find(p => p.id === "CV")?.Valor_luz ?? 5;
     const rTransCV = datosBDM.R.find(p => p.id === "CV")?.R_transfor ?? 1.5;
 
-    // Asignamos el nuevo mapeo correcto a nuestra variable exportable pasadas_55
+    // Tus datos teóricos originales inalterados
     pasadas_55 = [
-        
         { id: "AH", nombre: "AH",   tipo: "AH",        B: 180.0,   H: 46,      R: 120,     r: 8,   a: 12,  n: n_puntos,        Valor_luz: luzAH,      R_transfor: rTransAH, max_R_nom: 750,    min_R_nom: 650   },
         { id: "BH", nombre: "BH",   tipo: "ovalo",     B: 209.37,  H: 39,      R: 160,     r: 10,  a: 0,   n: n_puntos,        Valor_luz: luzBH,      R_transfor: rTransBH, max_R_nom: 750,    min_R_nom: 650   },
         { id: "CV", nombre: "CV",   tipo: "redondo",   B: 120.09,  H: 49,      R: 55,      r: 8,   a: 30,  n: n_puntos,        Valor_luz: luzCV,      R_transfor: rTransCV, max_R_nom: 750,    min_R_nom: 650   },
@@ -85,6 +83,25 @@ export function generarPasadas55() {
         { id: "C28", nombre: "C28", tipo: "RSM",       B: 6.43,    H: 2.24,    R: 2.96,    a: 90,  z: 3,   n: n_puntos,        Valor_luz: 1.2,        R_transfor: 1.1071,   max_R_nom: 156,    min_R_nom: 152   },
         { id: "C29", nombre: "C29", tipo: "RSM",       B: 5.87,    H: 2.29,    R: 2.79,    a: 117, z: 3,   n: n_puntos,        Valor_luz: 1.2,        R_transfor: 1.045,    max_R_nom: 156,    min_R_nom: 152   }, 
     ];
+
+    // --- ACTUALIZACIÓN DINÁMICA DESDE LOCALSTORAGE ---
+    // Si se modificaron valores en la página de detalle, se sobreescriben aquí sin perder la estructura base.
+    pasadas_55.forEach(p => {
+        const guardado = localStorage.getItem(`pasada_${p.id}`);
+        if (guardado) {
+            const datosModificados = JSON.parse(guardado);
+            if (datosModificados.B !== undefined) p.B = datosModificados.B;
+            if (datosModificados.H !== undefined) p.H = datosModificados.H;
+            if (datosModificados.R !== undefined) p.R = datosModificados.R;
+            if (datosModificados.r !== undefined) p.r = datosModificados.r;
+            if (datosModificados.a !== undefined) p.a = datosModificados.a;
+            if (datosModificados.R1 !== undefined) p.R1 = datosModificados.R1;
+            if (datosModificados.R2 !== undefined) p.R2 = datosModificados.R2;
+            if (datosModificados.n !== undefined) p.n = datosModificados.n;
+            if (datosModificados.Valor_luz !== undefined) p.Valor_luz = datosModificados.Valor_luz;
+        }
+    });
+
     return pasadas_55;
 }
 

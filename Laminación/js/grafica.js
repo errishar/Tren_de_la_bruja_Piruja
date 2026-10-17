@@ -1,6 +1,6 @@
 /* grafica.js */
 
-// 1. Registro global de instancias de gráficos (SÓLO UNA DECLARACIÓN AQUÍ)
+////_J_ 1. Registro global de instancias de gráficos (SÓLO UNA DECLARACIÓN AQUÍ)
 const chartsInstances = {};
 
 export function graficarCilindroGenerico(canvasId, cilindroGenerico, cilindroRelleno = null, alHacerClic = null) {
@@ -37,7 +37,7 @@ export function graficarCilindroGenerico(canvasId, cilindroGenerico, cilindroRel
         }
     ];
 
-    // 4. Polígono cerrado de relleno (+Y y -Y)
+    ////_J_ 4. Polígono cerrado de relleno (+Y y -Y)
     if (cilindroRelleno && cilindroRelleno.X_sup && cilindroRelleno.X_sup.length > 0) {
         let poligonoRelleno = [];
 
@@ -46,17 +46,17 @@ export function graficarCilindroGenerico(canvasId, cilindroGenerico, cilindroRel
         const X_inf = (cilindroRelleno.X_inf && cilindroRelleno.X_inf.length > 0) ? cilindroRelleno.X_inf : X_sup;
         const Y_inf = (cilindroRelleno.Y_inf && cilindroRelleno.Y_inf.length > 0) ? cilindroRelleno.Y_inf : Y_sup.map(y => -y);
 
-        // A) Tramo superior (de izquierda a derecha)
+        ////_J_ A) Tramo superior (de izquierda a derecha)
         for (let i = 0; i < X_sup.length; i++) {
             poligonoRelleno.push({ x: X_sup[i], y: Y_sup[i] });
         }
 
-        // B) Tramo inferior (de derecha a izquierda)
+        ////_J_ B) Tramo inferior (de derecha a izquierda)
         for (let i = X_inf.length - 1; i >= 0; i--) {
             poligonoRelleno.push({ x: X_inf[i], y: Y_inf[i] });
         }
 
-        // C) Cierre del polígono
+        ////_J_ C) Cierre del polígono
         if (poligonoRelleno.length > 0) {
             poligonoRelleno.push({ ...poligonoRelleno[0] });
         }
@@ -73,12 +73,12 @@ export function graficarCilindroGenerico(canvasId, cilindroGenerico, cilindroRel
         });
     }
 
-    // 5. Destruir la instancia anterior si ya existe en este canvas
+    ////_J_ 5. Destruir la instancia anterior si ya existe en este canvas
     if (chartsInstances[canvasId]) {
         chartsInstances[canvasId].destroy();
     }
 
-    // 6. Instanciar Chart.js con la acción al hacer clic
+    ////_J_ 6. Instanciar Chart.js con la acción al hacer clic
     const ctx = canvasEl.getContext("2d");
     chartsInstances[canvasId] = new Chart(ctx, {
         type: "line",

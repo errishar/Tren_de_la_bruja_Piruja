@@ -24,13 +24,13 @@ export function generarPerfilSalidaEkelund(perfilCilindro, P_in, g, R_nom, mu = 
     const X_in = P_in.X;
     const Y_in = P_in.Y;
 
-    // 1. Cálculo automático de W0 y A0 reutilizando la función de área
+    ////_j_ 1. Cálculo automático de W0 y A0 reutilizando la función de área
     const half_W0 = Math.max(...X_in);
     const W0 = 2 * half_W0;
     const A0 = calcularAreaDesdePuntos(X_in, Y_in);
 
 
-    // Función interna para consultar la altura de entrada interpolando los puntos
+    ////_j_ Función interna para consultar la altura de entrada interpolando los puntos
     const obtenerAlturaEn = function(x) {
         let x_abs = Math.abs(x);
         if (x_abs > half_W0) return 0;
@@ -44,7 +44,7 @@ export function generarPerfilSalidaEkelund(perfilCilindro, P_in, g, R_nom, mu = 
         return 2 * Y_in[Y_in.length - 1];
     };
 
-    // 2. Generación de puntos de la diferencia (dh) para calcular el Ah total con la función reutilizable
+    ////_j_ 2. Generación de puntos de la diferencia (dh) para calcular el Ah total con la función reutilizable
     let X_dh = [];
     let Y_dh = [];
     let y_c_suma = 0;
@@ -62,7 +62,7 @@ export function generarPerfilSalidaEkelund(perfilCilindro, P_in, g, R_nom, mu = 
         X_dh.push(x);
         Y_dh.push(dh); // Almacenamos la diferencia de altura temporalmente en Y
 
-        // Detección de contacto físico con el calibre
+        //_j_ Detección de contacto físico con el calibre
         if (dh > 0) {
             y_c_suma += Y_c[i];
             n_contacto++;
@@ -70,18 +70,18 @@ export function generarPerfilSalidaEkelund(perfilCilindro, P_in, g, R_nom, mu = 
         }
     }
 
-    // Obtenemos el Ah total mediante la integración trapezoidal reutilizada
+    //_J_ Obtenemos el Ah total mediante la integración trapezoidal reutilizada
     const Ah = calcularAreaDesdePuntos(X_dh, Y_dh);
 
 
  /*==================Asta aquí comun ambos modelos ======== */
 
 
-    // 3. Aplicación del Modelo de Ekelund Modificado para el ensanchamiento (delta_b)
+    //_j_ 3. Aplicación del Modelo de Ekelund Modificado para el ensanchamiento (delta_b)
     const H0_eq = A0 / W0;
     const dH_eq = Ah / W0;
     const h1_eq = H0_eq - dH_eq;
-    // Obtener el ancho máximo físico que permite el canal en el primer cuadrante
+    //_j_ Obtener el ancho máximo físico que permite el canal en el primer cuadrante
     const half_W_canal_max = Math.max(...X_c);
     
     const y_c_media = n_contacto > 0 ? (y_c_suma / n_contacto) : 0;
@@ -96,15 +96,15 @@ export function generarPerfilSalidaEkelund(perfilCilindro, P_in, g, R_nom, mu = 
 
     const W1 = W0 + delta_b/2;
     const half_W1_calculado = W1 / 2;
-    // RESTRICCIÓN FÍSICA: El material no puede rebasar la caja (tope contra el canal)
+    //_j_ RESTRICCIÓN FÍSICA: El material no puede rebasar la caja (tope contra el canal)
     const half_W1 = Math.min(half_W1_calculado, half_W_canal_max);
-    /* ================== Hasta aquí común ambos modelos ================== */
+    //_m_ ================== Hasta aquí común ambos modelos ================== */
 
     // 4. Construcción de la matriz de puntos de salida (X_out, Y_out) en el 1er cuadrante
     let X_out = [];
     let Y_out = [];
 
-    // --- Zona de Contacto con el Calibre ---
+    //_j_ --- Zona de Contacto con el Calibre ---
     for (let i = 0; i <= idx_contacto; i++) {
         X_out.push(X_c[i]);
         Y_out.push(Y_luz[i]);
@@ -113,7 +113,7 @@ export function generarPerfilSalidaEkelund(perfilCilindro, P_in, g, R_nom, mu = 
     const x_cont = X_out[X_out.length - 1];
     const y_cont = Y_out[Y_out.length - 1];
 
-    // --- Zona Libre / Abombamiento Lateral (Curva Parabólica de Transición) ---
+    //_j_ --- Zona Libre / Abombamiento Lateral (Curva Parabólica de Transición) ---
     if (half_W1 > x_cont) {
         let dx_libre = (half_W1 - x_cont) / n_puntos_libre;
 
@@ -129,7 +129,7 @@ export function generarPerfilSalidaEkelund(perfilCilindro, P_in, g, R_nom, mu = 
 
         X_out=X_out.map(x=> trunc(x,2));
         Y_out=Y_out.map(y=> trunc(y,2));
-    // Devuelve estrictamente el objeto {X, Y} del primer cuadrante listo para la rotación de 90°
+    //_j_ Devuelve estrictamente el objeto {X, Y} del primer cuadrante listo para la rotación de 90°
     return {
         X: X_out,
         Y: Y_out
