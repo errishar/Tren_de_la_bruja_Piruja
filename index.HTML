@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laminación</title>
+
+    <!--_H_ Math.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    
+
+    <!--_H_ Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="./css/estilo.css">
+</head>
+<body>
+    <header style="max-width: 1600px; margin: 0 auto 20px auto;">
+        <table>
+            <td>
+                <img src="./img/piruja.jpg" alt="">
+            </td>
+            <td>
+                <h1>Análisis de Perfil de Laminación</h1>
+                <h1> Tren de la bruja Piruja</h1>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Palanquilla de Ingreso</legend>
+                    <div>
+                        <input type="radio" id="palanquilla_130" name="palanquilla" value="130">
+                        <label for="palanquilla_130">palanquilla 130 mm</label>
+                    </div>
+
+                    <div>
+                        <input type="radio" id="palanquilla_140" name="palanquilla" value="140">
+                        <label for="palanquilla_140">palanquilla 140 mm</label>
+                    </div>
+
+                    <div>
+                        <input type="radio" id="palanquilla_150" name="palanquilla" value="150" checked>
+                        <label for="palanquilla_150">palanquilla 150 mm</label>
+                    </div>
+
+                    <div>
+                        <input type="radio" id="palanquilla_160" name="palanquilla" value="160">
+                        <label for="palanquilla_160">palanquilla 160 mm</label>
+                    </div>
+                </fieldset>
+            </td>
+            
+        </table>
+        
+        
+    </header>
+
+    <main>
+        <!--_H_ CONTENEDOR EN 2 COLUMNAS -->
+        <div id="contenedor-tablas"></div>
+    </main>
+
+    <!--_H_ Carga del script principal -->
+    <script type="module" src="./js/lamina_2.js"></script>
+</body>
+</html>

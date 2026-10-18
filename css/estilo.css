@@ -1,0 +1,71 @@
+*{box-sizing: border-box;}
+
+html{font: 10px}
+
+body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        img{
+            width: 100px;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            max-width: 100%;
+            height: auto;
+            /*border-radius: 50%;*/
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            transition: 0.3s;
+        }
+
+        /* 1. CONTENEDOR PRINCIPAL EN 2 COLUMNAS */
+        #contenedor-tablas {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Crea 2 columnas de igual ancho */
+            gap: 20px; /* Espaciado uniforme entre cajas */
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* 2. TARJETAS/CARDS ADAPTADAS A SU COLUMNA */
+        .cilindro-card, .pasada-card {
+            background: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 0; /* Desactivar margen auto para dejar trabajar al grid */
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tabla-cilindro {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .tabla-cilindro th, .tabla-cilindro td {
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .tabla-cilindro th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .grafica-container {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* 3. RESPONSIVO: Pasa a 1 columna en pantallas de tableta/móvil */
+        @media (max-width: 1024px) {
+            #contenedor-tablas {
+                grid-template-columns: 1fr;
+            }
+        }
