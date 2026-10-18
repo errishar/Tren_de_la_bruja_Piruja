@@ -37,6 +37,7 @@ export function graficarCilindroGenerico(canvasId, cilindroGenerico, cilindroRel
         }
     ];
 
+    
     ////_J_ 4. Polígono cerrado de relleno (+Y y -Y)
     if (cilindroRelleno && cilindroRelleno.X_sup && cilindroRelleno.X_sup.length > 0) {
         let poligonoRelleno = [];

@@ -7,6 +7,7 @@ export function linespace(x1, x2, n) {
     return X;
 }
 
+
 export function trunc(numero,n) {
   return Math.trunc(numero * 10**n) / (10**n);
 }

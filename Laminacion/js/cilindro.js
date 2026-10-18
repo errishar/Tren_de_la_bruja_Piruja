@@ -2,6 +2,7 @@
 import { linespace, interseccion_dos_circunferencias, calcularCentroC2, trunc} from './calculos.js';
 
 
+
 export function cilindro_AH(n, B, H, R, r, a_deg) {
     let factor= 0.25
     

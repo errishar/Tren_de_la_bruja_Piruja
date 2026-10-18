@@ -32,6 +32,7 @@ export function luces_R_palanquilla() {
     };
 }
 
+
 // 2. Variable global para almacenar el estado actual mutable del array de pasadas
 export let pasadas_55 = [];
 

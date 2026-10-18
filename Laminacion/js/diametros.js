@@ -24,7 +24,6 @@ const cil_cont = [
 
 
 
-
 const cil_rey =[
     { id: "C12", nombre: "Caja C12", tipo: "ovalo",     B: 39.33,   H: 8.5,     R: 27,      r: 1.5, a: 0,   },
     { id: "C13", nombre: "Caja C13", tipo: "redondo",   B: 26.79,   H: 10.7,    R: 12.5,    r: 1.5, a: 30,  },

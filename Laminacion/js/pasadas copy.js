@@ -22,7 +22,6 @@ export function luces_R_palanquilla() {
     if (!radioSeleccionado) return { luces: [], R: [] };
 
     const int_palan_selec = parseInt(radioSeleccionado.value, 10);
-
     const luz = luces_BDM.find(item => item.palanquilla === int_palan_selec);
     const R = R_BDM.find(item => item.palanquilla === int_palan_selec);
 

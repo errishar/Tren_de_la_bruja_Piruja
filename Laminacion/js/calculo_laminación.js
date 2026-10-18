@@ -3,7 +3,6 @@ import { cilindro_AH, cilindro_ovalo, cilindro_redondo, cilindro_C1, cilindro_RS
 import { aplicarLuz, simetria, truncarRelleno, calcular_X, interpolarY, calcularAreaDesdePuntos, crearFuncionAltura, trunc } from './calculos.js';
 
 
-
 /** 
  * Genera el perfil de salida para la Caja AH usando el Modelo de Ekelund Modificado.
  * Recibe únicamente las coordenadas (X, Y) del primer cuadrante de entrada.

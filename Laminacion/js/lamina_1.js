@@ -5,7 +5,6 @@ import { aplicarLuz, simetria, truncarRelleno, calcular_X } from './calculos.js'
 import { graficarCilindroGenerico } from './grafica.js';
 import { pasadas_55, generarPasadas55 } from './pasadas.js';
 
-
 const n_puntos = 40;
 
 function actualizarPasadas() {

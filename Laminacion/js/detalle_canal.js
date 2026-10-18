@@ -12,7 +12,6 @@
 
 //_j_ aplica una luz inicial y simetría para dibujarla    
 
-
 //_j_ en diseño canal.HTML aparece una gráfica con perfilSimetrico dibujado, y debajo scrolles que cambian los datos si es:
 //_j_  - "AH" : p.B, p.H, p.R, p.r, p.a
 //_j_  - "ovalo" : p.B, p.H, p.R, p.r
