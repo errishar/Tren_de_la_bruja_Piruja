@@ -8,7 +8,6 @@
       "backgroundColor": "transparent", //• "transparent": Establece el color de fondo del comentario. Al estar en "transparent" (transparente), el fondo mantiene el color oscuro por defecto de tu editor de código. Si pusieras un color aquí, se crearía una franja resaltadora detrás de las letras.
       "bold": false, //• false: Controla las negritas. Si lo pones en true, el texto del comentario se volverá más grueso y robusto para resaltar más.
       "italic": false //• false: Controla las cursivas (letras inclinadas). Si lo cambias a true, el texto se inclinará hacia la derecha, dándole un estilo de anotación manuscrita.
-
     },
     {
       "tag": "_C_", // Para CSS
