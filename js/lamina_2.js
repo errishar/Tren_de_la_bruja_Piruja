@@ -116,7 +116,7 @@ function actualizarPasadas() {
         const xVals = (rellenoSimetrico && rellenoSimetrico.X_sup && rellenoSimetrico.X_sup.length > 0) ? rellenoSimetrico.X_sup : [0];
         const yVals = (rellenoSimetrico && rellenoSimetrico.Y_sup && rellenoSimetrico.Y_sup.length > 0) ? rellenoSimetrico.Y_sup : [0];
 
-        const anchomax = (Math.max(...xVals)).toFixed(0);
+        const anchomax = ((Math.max(...xVals))*2).toFixed(0);
         const altomax = (Math.max(...yVals) * 2).toFixed(0);
 
         
