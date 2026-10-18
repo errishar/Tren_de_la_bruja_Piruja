@@ -208,6 +208,7 @@ export function interpolarY(perfil, xVal) {
     return Y[Y.length - 1];
 }
 
+
 /**
  * Calcula el área transversal completa a partir de los puntos del 1er cuadrante
  * @param {Array<number>} X - Coordenadas X del perfil en el primer cuadrante
