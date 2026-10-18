@@ -73,15 +73,10 @@ function renderizarPagina(p, contenedor) {
     let rGenVal = p.R_modificado !== undefined ? p.R_modificado : p.R;
     let aVal = p.a_modificado !== undefined ? p.a_modificado : p.a;
     let nVal = p.n_modificado !== undefined ? p.n_modificado : p.n;
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-    let R_nom_modificado
-    let R_nom = R_nom_modificado !== undefined ? p.R_nom_modificado : (p.max_R_nom + p.min_R_nom)/2;
-=======
     let R_Tabla_min = p.min_R_Tabla !== undefined ? p.R_Tabla_min : 100;
     let R_Tabla_max = p.max_R_Tabla !== undefined ? p.R_Tabla_max : 1000;
     let R_Tabla_original = (R_Tabla_max + R_Tabla_min)/2;
     let R_Tabla = p.R_Tabla_modificado !== undefined ? p.R_Tabla_modificado : R_Tabla_original ;
->>>>>>> rama-temporal:js/detalle_canal.js
 
 
     // Generar geometría del perfil según el tipo de canal
@@ -105,20 +100,12 @@ function renderizarPagina(p, contenedor) {
 
     if (p.tipo === "AH") {
         let mu = 0.35;
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-        rellenocuadrante = generarPerfilSalidaEkelundZheng(perfilCuadrante, rellenocuadrante, luzVal, R_nom, mu, n_puntos);
-=======
         rellenocuadrante = generarPerfilSalidaEkelundZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
->>>>>>> rama-temporal:js/detalle_canal.js
     } else {
         if (p.nombre !== "BH" && p.nombre !== "CV") {
             rellenocuadrante = rotarSalidaAEntrada(rellenocuadrante);
         }
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-        rellenocuadrante = generarPerfilSalidaZheng(perfilCuadrante, rellenocuadrante, luzVal, R_nom, 1.25, (p.tipo === "redondo") ? 0.83 : 0.97, 3);
-=======
         rellenocuadrante = generarPerfilSalidaZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, 1.25, (p.tipo === "redondo") ? 0.83 : 0.97, 3);
->>>>>>> rama-temporal:js/detalle_canal.js
     }
 
     areaSalidaTotal = calcularAreaDesdePuntos(rellenocuadrante.X, rellenocuadrante.Y);
@@ -134,25 +121,13 @@ function renderizarPagina(p, contenedor) {
     const altomax = (Math.max(...yVals) * 2).toFixed(0);
 
     // Construcción dinámica de las filas de la tabla usando las variables seguras
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-=======
     //_j_ crea la variable filasTablaHTML con contenido genérico, común a todo, caja, B y H
->>>>>>> rama-temporal:js/detalle_canal.js
     let filasTablaHTML = `
         <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">Caja:</td><td style="padding: 6px 0; text-align: right;">${p.id}</td></tr>
         <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">B:</td><td style="padding: 6px 0; text-align: right;">${bVal.toFixed(2)} (${p.B.toFixed(2)}) mm</td></tr>
         <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">H:</td><td style="padding: 6px 0; text-align: right;">${hVal.toFixed(2)} (${p.H.toFixed(2)}) mm</td></tr>
     `;
 
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-    if (p.tipo === "C1") {
-        filasTablaHTML += `
-            <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">R1:</td><td style="padding: 6px 0; text-align: right;">${r1Val.toFixed(2)} (${p.R1.toFixed(2)}) mm</td></tr>
-            <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">R2:</td><td style="padding: 6px 0; text-align: right;">${r2Val.toFixed(2)} (${p.R2.toFixed(2)}) mm</td></tr>
-            <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">r:</td><td style="padding: 6px 0; text-align: right;">${rVal.toFixed(2)} (${p.r.toFixed(2)}) mm</td></tr>
-        `;
-    } else if (p.tipo === "RSM") {
-=======
     if (p.tipo === "C1") { //_j_ si es C1 a lo genérico añade R1, R2 y r
         //_j_ a la cadena le sume estos valores específicos del tipo de caja
         filasTablaHTML += ` <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">R1:</td><td style="padding: 6px 0; text-align: right;">${r1Val.toFixed(2)} (${p.R1.toFixed(2)}) mm</td></tr>
@@ -161,31 +136,17 @@ function renderizarPagina(p, contenedor) {
         `;
     } else if (p.tipo === "RSM") {//_j_ si es RSM a lo genérico añade R, n, a
         //_j_ a la cadena le sume estos valores específicos del tipo de caja
->>>>>>> rama-temporal:js/detalle_canal.js
         filasTablaHTML += `
             <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">R:</td><td style="padding: 6px 0; text-align: right;">${rGenVal.toFixed(2)} (${p.R.toFixed(2)}) mm</td></tr>
             <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">n:</td><td style="padding: 6px 0; text-align: right;">${nVal.toFixed(2)} (${p.n.toFixed(2)})</td></tr>
             <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">a:</td><td style="padding: 6px 0; text-align: right;">${aVal.toFixed(2)} (${p.a.toFixed(2)})°</td></tr>
         `;
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-    } else {
-=======
     } else { //_j_ si no son lo anterios a lo genérico R, y r
         //_j_ a la cadena le sume estos valores excluidos de los casos particulares anteriores
->>>>>>> rama-temporal:js/detalle_canal.js
         filasTablaHTML += `
             <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">R:</td><td style="padding: 6px 0; text-align: right;">${rGenVal.toFixed(2)} (${p.R.toFixed(2)}) mm</td></tr>
             <tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">r:</td><td style="padding: 6px 0; text-align: right;">${rVal.toFixed(2)} (${p.r.toFixed(2)}) mm</td></tr>
         `;
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-        if (p.tipo !== "ovalo") {
-            filasTablaHTML += `<tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">a:</td><td style="padding: 6px 0; text-align: right;">${aVal.toFixed(2)} (${p.a.toFixed(2)})°</td></tr>`;
-        }
-    }
-        filasTablaHTML = `<tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">H:</td><td style="padding: 6px 0; text-align: right;">${R_nom_modificado.toFixed(2)} (${p.R_nom.toFixed(2)}) mm</td></tr>`;
-   
-
-=======
         if (p.tipo !== "ovalo") {//_j_ de lo que queda si no es óvalo, añade el ángulo
             filasTablaHTML += `<tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">a:</td><td style="padding: 6px 0; text-align: right;">${aVal.toFixed(2)} (${p.a.toFixed(2)})°</td></tr>`;
         }
@@ -198,7 +159,6 @@ function renderizarPagina(p, contenedor) {
     
     
 
->>>>>>> rama-temporal:js/detalle_canal.js
     let controlesHTML = generarHTMLControles(p);
 
     card.innerHTML = `
@@ -249,14 +209,10 @@ function generarHTMLControles(p) {
         </div>
     `;
 
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-
-=======
     let minR = p.R_Tabla_min !== undefined ? p.R_Tabla_min : 100;
     let maxR = p.R_Tabla_max !== undefined ? p.R_Tabla_max : 1000;
     let rOrig = (maxR + minR) / 2;
     let rValTabla = p.R_Tabla_modificado !== undefined ? p.R_Tabla_modificado : rOrig;
->>>>>>> rama-temporal:js/detalle_canal.js
 
     if (p.tipo === "AH") {
         html += crearControl("B (Ancho)", "B", p.B_modificado ?? p.B, p.B * 0.5, p.B * 1.5, 0.5);
@@ -264,58 +220,34 @@ function generarHTMLControles(p) {
         html += crearControl("R (Radio Sup)", "R", p.R_modificado ?? p.R, p.R * 0.5, p.R * 1.5, 1);
         html += crearControl("r (Radio Esq)", "r", p.r_modificado ?? p.r, 1, p.r * 2, 0.5);
         html += crearControl("a (Ángulo)", "a", p.a_modificado ?? p.a, 0, 60, 1);
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-        html += crearControl("R_nom (Tabla de cilindro)", "a", p.R_nom_modificado ?? p.R_nom, p.min_R_nom, p.max_R_nom, 1);
-        
-=======
         html += crearControl("R_Tabla (Tabla de cilindro)", "R_Tabla", rValTabla, minR, maxR, 1);
->>>>>>> rama-temporal:js/detalle_canal.js
     } else if (p.tipo === "ovalo") {
         html += crearControl("B (Ancho)", "B", p.B_modificado ?? p.B, p.B * 0.5, p.B * 1.5, 0.5);
         html += crearControl("H (Alto)", "H", p.H_modificado ?? p.H, p.H * 0.5, p.H * 1.5, 0.5);
         html += crearControl("R (Radio)", "R", p.R_modificado ?? p.R, p.R * 0.5, p.R * 1.5, 1);
         html += crearControl("r (Radio Esq)", "r", p.r_modificado ?? p.r, 1, p.r * 2, 0.5);
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-        html += crearControl("R_nom (Tabla de cilindro)", "a", p.R_nom_modificado ?? p.R_nom, p.min_R_nom, p.max_R_nom, 1);
-
-=======
         html += crearControl("R_Tabla (Tabla de cilindro)", "R_Tabla", rValTabla, minR, maxR, 1);
->>>>>>> rama-temporal:js/detalle_canal.js
     } else if (p.tipo === "redondo") {
         html += crearControl("B (Ancho)", "B", p.B_modificado ?? p.B, p.B * 0.5, p.B * 1.5, 0.5);
         html += crearControl("H (Alto)", "H", p.H_modificado ?? p.H, p.H * 0.5, p.H * 1.5, 0.5);
         html += crearControl("R (Radio)", "R", p.R_modificado ?? p.R, p.R * 0.5, p.R * 1.5, 1);
         html += crearControl("r (Radio Esq)", "r", p.r_modificado ?? p.r, 0, p.r * 2, 0.5);
         html += crearControl("a (Ángulo)", "a", p.a_modificado ?? p.a, 0, 60, 1);
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-        html += crearControl("R_nom (Tabla de cilindro)", "a", p.R_nom_modificado ?? p.R_nom, p.min_R_nom, p.max_R_nom, 1);
-
-=======
         html += crearControl("R_Tabla (Tabla de cilindro)", "R_Tabla", rValTabla, minR, maxR, 1);
->>>>>>> rama-temporal:js/detalle_canal.js
     } else if (p.tipo === "C1") {
         html += crearControl("B (Ancho)", "B", p.B_modificado ?? p.B, p.B * 0.5, p.B * 1.5, 0.5);
         html += crearControl("H (Alto)", "H", p.H_modificado ?? p.H, p.H * 0.5, p.H * 1.5, 0.5);
         html += crearControl("R1 (Radio Sup)", "R1", p.R1_modificado ?? p.R1, p.R1 * 0.5, p.R1 * 1.5, 1);
         html += crearControl("R2 (Radio Conc)", "R2", p.R2_modificado ?? p.R2, p.R2 * 0.5, p.R2 * 1.5, 1);
         html += crearControl("r (Radio Esq)", "r", p.r_modificado ?? p.r, 1, p.r * 2, 0.5);
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-        html += crearControl("R_nom (Tabla de cilindro)", "a", p.R_nom_modificado ?? p.R_nom, p.min_R_nom, p.max_R_nom, 1);
-        
-=======
         html += crearControl("R_Tabla (Tabla de cilindro)", "R_Tabla", rValTabla, minR, maxR, 1);
->>>>>>> rama-temporal:js/detalle_canal.js
     } else if (p.tipo === "RSM") {
         html += crearControl("B (Ancho)", "B", p.B_modificado ?? p.B, p.B * 0.5, p.B * 1.5, 0.5);
         html += crearControl("H (Alto)", "H", p.H_modificado ?? p.H, p.H * 0.5, p.H * 1.5, 0.5);
         html += crearControl("R (Radio)", "R", p.R_modificado ?? p.R, p.R * 0.5, p.R * 1.5, 1);
         html += crearControl("n (n veces Radio)", "n", p.n_modificado ?? p.n, p.n * 0.5, p.n * 1.5, 1);
         html += crearControl("a (Ángulo)", "a", p.a_modificado ?? p.a, 50, 150, 1);
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-        html += crearControl("R_nom (Tabla de cilindro)", "a", p.R_nom_modificado ?? p.R_nom, p.min_R_nom, p.max_R_nom, 1);
-=======
         html += crearControl("R_Tabla (Tabla de cilindro)", "R_Tabla", rValTabla, minR, maxR, 1);
->>>>>>> rama-temporal:js/detalle_canal.js
     }
 
     return html;
@@ -338,10 +270,7 @@ function vincularEventosParametros(p, contenedor) {
             else if (param === 'R1') p.R1_modificado = valor;
             else if (param === 'R2') p.R2_modificado = valor;
             else if (param === 'n') p.n_modificado = valor;
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-=======
             else if (param === 'R_Tabla') p.R_Tabla_modificado = valor;
->>>>>>> rama-temporal:js/detalle_canal.js
 
             contenedor.querySelectorAll(`[data-param="${param}"]`).forEach(el => {
                 el.value = valor;
@@ -368,18 +297,10 @@ function vincularEventosParametros(p, contenedor) {
             delete p.R1_modificado;
             delete p.R2_modificado;
             delete p.n_modificado;
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-            delete p.R_nom_modificado;
-
-            // Limpiar del storage
-            localStorage.removeItem(`pasada_${p.id}`);
-
-=======
             delete p.R_Tabla_modificado;
 
             // Limpiar del storage
             localStorage.removeItem(`pasada_${p.id}`);
->>>>>>> rama-temporal:js/detalle_canal.js
             renderizarPagina(p, contenedor);
         });
     }
@@ -397,11 +318,7 @@ function guardarModificacionesEnStorage(p) {
         R2_modificado: p.R2_modificado,
         n_modificado: p.n_modificado,
         Valor_luz_modificado: p.Valor_luz_modificado,
-<<<<<<< HEAD:Laminación/js/detalle_canal.js
-        R_nom_modificado: p.R_nom_modificado,
-=======
         R_Tabla_modificado: p.R_Tabla_modificado,
->>>>>>> rama-temporal:js/detalle_canal.js
     };
     localStorage.setItem(`pasada_${p.id}`, JSON.stringify(datosModificados));
 }

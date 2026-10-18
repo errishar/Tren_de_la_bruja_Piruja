@@ -19,6 +19,9 @@ body {
             transition: 0.3s;
         }
 
+
+
+
         /* 1. CONTENEDOR PRINCIPAL EN 2 COLUMNAS */
         #contenedor-tablas {
             display: grid;

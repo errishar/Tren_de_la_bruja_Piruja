@@ -25,13 +25,8 @@ function actualizarPasadas() {
     contenedor.innerHTML = "";
 
     pasadas_55.forEach((p) => {
-<<<<<<< HEAD:Laminación/js/lamina_2.js
-        // Dentro del bucle pasadas_55.forEach((p) => { ... }) en lamina_2.js:
-
-=======
         // Obtener parámetros seguros (modificados o originales) 
         let luzVal = p.Valor_luz_modificado !== undefined ? p.Valor_luz_modificado : (p.Valor_luz || 10);
->>>>>>> rama-temporal:js/lamina_2.js
         let bVal = p.B_modificado !== undefined ? p.B_modificado : p.B;
         let hVal = p.H_modificado !== undefined ? p.H_modificado : p.H;
         let rVal = p.r_modificado !== undefined ? p.r_modificado : p.r;
@@ -40,19 +35,6 @@ function actualizarPasadas() {
         let rGenVal = p.R_modificado !== undefined ? p.R_modificado : p.R;
         let aVal = p.a_modificado !== undefined ? p.a_modificado : p.a;
         let nVal = p.n_modificado !== undefined ? p.n_modificado : p.n;
-<<<<<<< HEAD:Laminación/js/lamina_2.js
-        let luzVal = p.Valor_luz_modificado !== undefined ? p.Valor_luz_modificado : p.Valor_luz;
-        let R_nom = p.R_nom !== undefined ? p.R_nom : p.n;
-
-        // Y al generar la geometría pasas estas variables seguras:
-        let perfilCuadrante;
-        if (p.tipo === "AH") perfilCuadrante = cilindro_AH(nVal || p.n || n_puntos, bVal, hVal, rGenVal, rVal, aVal);
-        else if (p.tipo === "ovalo") perfilCuadrante = cilindro_ovalo(nVal || p.n || n_puntos, bVal, hVal, rGenVal, rVal);
-        else if (p.tipo === "redondo") perfilCuadrante = cilindro_redondo(nVal || p.n || n_puntos, bVal, hVal, rGenVal, rVal, aVal || 30);
-        else if (p.tipo === "C1") perfilCuadrante = cilindro_C1(nVal || p.n || n_puntos, bVal, hVal, r1Val, r2Val, rVal);
-        else if (p.tipo === "RSM") perfilCuadrante = cilindro_RSM(nVal || p.n || n_puntos, bVal, hVal, rGenVal, aVal || 100, nVal || 2);
-        
-=======
 
         let min_R_Tabla = p.R_Tabla_min !== undefined ? p.R_Tabla_min : 100;
         let max_R_Tabla = p.R_Tabla_max !== undefined ? p.R_Tabla_max : 1000;
@@ -68,16 +50,11 @@ function actualizarPasadas() {
         else if (p.tipo === "RSM") {perfilCuadrante = cilindro_RSM(nVal || p.n || n_puntos, bVal, hVal, rGenVal, aVal || 100, nVal || 2);} 
         else {perfilCuadrante = cilindro_ovalo(nVal || p.n || n_puntos, bVal, hVal, rGenVal, rVal);}
             
->>>>>>> rama-temporal:js/lamina_2.js
         let perfilConLuz = aplicarLuz(perfilCuadrante, luzVal);
         let perfilSimetrico = simetria(perfilConLuz);
         let areaSalidaTotal ;
         let rTransVal ;
-<<<<<<< HEAD:Laminación/js/lamina_2.js
-        
-=======
     
->>>>>>> rama-temporal:js/lamina_2.js
         if (p.tipo === "AH") {
             let mu = 0.35;
             /*
@@ -88,15 +65,6 @@ function actualizarPasadas() {
             _Ja_console.log("mu",p.nombre,": ",mu);
             */
             
-<<<<<<< HEAD:Laminación/js/lamina_2.js
-            rellenocuadrante = generarPerfilSalidaEkelundZheng(perfilCuadrante, rellenocuadrante, luzVal, R_nom, mu, n_puntos);
-            /*
-                _M_ rellenocuadrante = generarPerfilSalidaEkelundZheng(perfilCuadrante, rellenocuadrante, luzVal, R_nom, mu, n_puntos);
-                _M_ rellenocuadrante = generarPerfilSalidaShinokura(perfilCuadrante, rellenocuadrante, luzVal, R_nom, alpha, n_puntos);
-                _M_ rellenocuadrante =generarPerfilSalidaTafelSedlaczek(perfilCuadrante, rellenocuadrante, luzVal, R_nom, n_puntos);
-                _M_ rellenocuadrante = generarPerfilSalidaKoncevicz(perfilCuadrante, rellenocuadrante, luzVal, R_nom, n_puntos);
-                _M_ rellenocuadrante = generarPerfilSalidaZheng(perfilCilindro, P_in, g, R_nom, m_material = 1.25, gamma = 0.97, maxIter = 3);
-=======
             rellenocuadrante = generarPerfilSalidaEkelundZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
             /*
                 _M_ rellenocuadrante = generarPerfilSalidaEkelundZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
@@ -104,36 +72,10 @@ function actualizarPasadas() {
                 _M_ rellenocuadrante =generarPerfilSalidaTafelSedlaczek(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
                 _M_ rellenocuadrante = generarPerfilSalidaKoncevicz(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
                 _M_ rellenocuadrante = generarPerfilSalidaZheng(perfilCilindro, P_in, g, R_Tabla, m_material = 1.25, gamma = 0.97, maxIter = 3);
->>>>>>> rama-temporal:js/lamina_2.js
             */    
             areaSalidaTotal = calcularAreaDesdePuntos(rellenocuadrante.X, rellenocuadrante.Y);
             rTransVal = areaEntradaTotal/areaSalidaTotal ;
         } else {
-<<<<<<< HEAD:Laminación/js/lamina_2.js
-            let alpha = 0.85;
-            /*
-            _Ja_console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
-            _Ja_console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
-            _Ja_console.log("luzVal",p.nombre,": ", luzVal);
-            _Ja_console.log("R_nom",p.nombre,": ", R_nom);
-            _Ja_console.log("alpha",p.nombre,": ",alpha);*/
-
-            if (p.nombre !="BH" && p.nombre !="CV" ){
-            rellenocuadrante = rotarSalidaAEntrada(rellenocuadrante);
-            }
-
-            rellenocuadrante = generarPerfilSalidaZheng(perfilCuadrante, rellenocuadrante, luzVal, R_nom, 1.25, (p.tipo === "redondo") ? 0.83 : 0.97, 3);
-            /* 
-                _M_ rellenocuadrante = generarPerfilSalidaShinokura(perfilCuadrante, rellenocuadrante, luzVal, R_nom, alpha, n_puntos);
-                _M_ rellenocuadrante =generarPerfilSalidaTafelSedlaczek(perfilCuadrante, rellenocuadrante, luzVal, R_nom, n_puntos);
-                _M_ rellenocuadrante = generarPerfilSalidaKoncevicz(perfilCuadrante, rellenocuadrante, luzVal, R_nom, n_puntos);
-                _M_ rellenocuadrante = generarPerfilSalidaZheng(perfilCuadrante, rellenocuadrante, luzVal, R_nom, 1.25, (p.tipo === "redondo") ? 0.83 : 0.97, 3);
-                */
-
-            areaSalidaTotal = calcularAreaDesdePuntos(rellenocuadrante.X, rellenocuadrante.Y);            
-            rTransVal = areaEntradaTotal/areaSalidaTotal ;
-            
-=======
         let alpha = 0.85;
         /*
         _Ja_console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
@@ -144,7 +86,6 @@ function actualizarPasadas() {
 
         if (p.nombre !="BH" && p.nombre !="CV" ){
         rellenocuadrante = rotarSalidaAEntrada(rellenocuadrante);
->>>>>>> rama-temporal:js/lamina_2.js
         }
 
         rellenocuadrante = generarPerfilSalidaZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, 1.25, (p.tipo === "redondo") ? 0.83 : 0.97, 3);
