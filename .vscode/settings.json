@@ -46,5 +46,6 @@
       "bold": false,
       "italic": false
     }
-  ]
+  ],
+  "git.autofetch": "all"
 }
