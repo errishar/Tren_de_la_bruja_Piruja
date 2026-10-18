@@ -22,7 +22,7 @@ body {
 
 
 
-        /* 1. CONTENEDOR PRINCIPAL EN 2 COLUMNAS */
+        /*_c_ 1. CONTENEDOR PRINCIPAL EN 2 COLUMNAS */
         #contenedor-tablas {
             display: grid;
             grid-template-columns: repeat(2, 1fr); /* Crea 2 columnas de igual ancho */
@@ -32,7 +32,7 @@ body {
             margin: 0 auto;
         }
 
-        /* 2. TARJETAS/CARDS ADAPTADAS A SU COLUMNA */
+        /*_c_ 2. TARJETAS/CARDS ADAPTADAS A SU COLUMNA */
         .cilindro-card, .pasada-card {
             background: #ffffff;
             border: 1px solid #ced4da;
@@ -64,11 +64,22 @@ body {
         .grafica-container {
             width: 100%;
             margin: 0 auto;
+            cursor: "/img/bruja.png"; /*_C_ O 'url("tu-imagen.png") 16x16, auto' para un dibujo personalizado */
         }
+        
 
-        /* 3. RESPONSIVO: Pasa a 1 columna en pantallas de tableta/móvil */
+        /*_c_ 3. RESPONSIVO: Pasa a 1 columna en pantallas de tableta/móvil */
         @media (max-width: 1024px) {
             #contenedor-tablas {
                 grid-template-columns: 1fr;
             }
         }
+        
+
+        /*_C_ Aplica la bruja a los sliders, inputs y botones de control */
+        .slider-rtrans,
+        .slider-luz,
+        .input-rtrans-num,
+        .input-luz-num,
+        .btn-reset-param,
+        .btn-reset-todo {cursor: url("img/bruja.png") 16 16, pointer !important;}

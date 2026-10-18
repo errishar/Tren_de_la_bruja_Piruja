@@ -78,7 +78,7 @@ export function graficarCilindroGenerico(canvasId, cilindroGenerico, cilindroRel
         chartsInstances[canvasId].destroy();
     }
 
-    ////_J_ 6. Instanciar Chart.js con la acción al hacer clic
+    //_J_ 6. Instanciar Chart.js con la acción al hacer clic
     const ctx = canvasEl.getContext("2d");
     chartsInstances[canvasId] = new Chart(ctx, {
         type: "line",
@@ -87,9 +87,18 @@ export function graficarCilindroGenerico(canvasId, cilindroGenerico, cilindroRel
             responsive: true,
             maintainAspectRatio: true,
             aspectRatio: limiteX / limiteY,
+
+            /*
+            _Ja_ onHover: (event) => {
+            _ja_    if (event.native && event.native.target) {
+            _ja_        event.native.target.style.cursor = 'pointer';
+            _ja_    } 
+                    */
+
             onHover: (event) => {
+                // Aquí colocas el cursor de la bruja para la gráfica
                 if (event.native && event.native.target) {
-                    event.native.target.style.cursor = 'pointer';
+                    event.native.target.style.cursor = 'url("img/bruja.png") 16 16, pointer';
                 }
             },
             onClick: (evt, activeElements, chart) => {
