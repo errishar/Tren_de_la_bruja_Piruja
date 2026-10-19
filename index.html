@@ -10,12 +10,13 @@
 
     <!--_H_ Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="./js/visitas.js"></script>
+    <!-- Añadimos ?v=3 al final para obligar al navegador a descartar el script viejo -->
+    <script src="js/rastreador.js?v=4:10"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            iniciarRastreo();
-        });
-    </script>
+    window.addEventListener('DOMContentLoaded', () => {
+        iniciarRastreo();
+    });
+</script>
 
     <link rel="stylesheet" href="./css/estilo.css">
 </head>
@@ -23,7 +24,7 @@
     <header style="max-width: 1600px; margin: 0 auto 20px auto;">
         <table>
             <td>
-                <script src="./js/footer.js"></script>
+                <script src="js/footer.js"></script>
                 <div id="membrete"></div>
             </td>
             <td>

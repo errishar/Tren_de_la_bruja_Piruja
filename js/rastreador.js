@@ -1,31 +1,26 @@
-// CONFIGURACIÓN DE TELEGRAM
-const TELEGRAM_TOKEN = '8312771641:AAGMYRyDRCTTh0Zn_CiZrfuCZZGy5znd7C0'; 
-const TELEGRAM_CHAT_ID = '583632892'; 
+const TELEGRAM_TOKEN = '8312771041:AAGMYRyDRCTThBZn_CiZrfaEZZ6ySznd7C0';
+const TELEGRAM_CHAT_ID = '583652892';
 
-// Función interna para enviar los datos a la API de Telegram
 function enviarATelegram(texto) {
-  // CORREGIDO: Línea limpia y activa con la URL oficial de la API de Telegram bots
-  const url = `https://telegram.org{TELEGRAM_TOKEN}/sendMessage`;
-  
+  const url = 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage';
+
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       chat_id: TELEGRAM_CHAT_ID,
-      text: texto,
-      parse_mode: 'Markdown'
+      text: texto
+      // parse_mode: 'Markdown'  <-- Asegúrate de que esta línea NO esté
     })
   }).catch(error => console.error('Error enviando a Telegram:', error));
 }
 
-// Función principal que rastrea la conexión (esta es la que llamamos desde el HTML)
+// Función principal que rastrea la conexión
 function iniciarRastreo() {
-  // CORREGIDO: Se añade /json/ para que devuelva los datos estructurados correctamente
-  fetch('https://ipapi.co')
+  // /json/ al final para recibir los datos estructurados
+  fetch('https://ipapi.co/json/')
     .then(response => response.json())
     .then(data => {
-      
-      // 1. Intenta pintar los datos en la web si existe el contenedor id="info-visitante"
       const contenedor = document.getElementById('info-visitante');
       if (contenedor) {
         contenedor.innerHTML = `
@@ -34,7 +29,6 @@ function iniciarRastreo() {
         `;
       }
 
-      // 2. Envía la alerta a tu celular por Telegram
       const mensajeTelegram = `🔔 *¡Nueva visita en el Tren de la Bruja!*
 📍 *IP:* ${data.ip}
 🌍 *País:* ${data.country_name}
