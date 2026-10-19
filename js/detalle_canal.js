@@ -1,26 +1,4 @@
 
-
-//_j_recive el dato p.id calcado en la gráfica
-
-
-
-//_j_ Buscar la pasada correspondiente en pasadas_55 según el ID detectado
-    
-
-
-//_j_ en función del tipo de caja y 
-
-//_j_ aplica una luz inicial y simetría para dibujarla    
-
-
-//_j_ en diseño canal.HTML aparece una gráfica con perfilSimetrico dibujado, y debajo scrolles que cambian los datos si es:
-//_j_  - "AH" : p.B, p.H, p.R, p.r, p.a
-//_j_  - "ovalo" : p.B, p.H, p.R, p.r
-//_j_  - "redondo" : p.B, p.H, p.R, p.r, p.a 
-//_j_  - "C1" : p.B, p.H, p.R1, p.R2, p.r
-//_j_  - "RSM" : p.B, p.H, p.R, p.a
-
-// _j_ después de cada cambio, actualice en la página Index.HTML
 /* detalle_canal.js */
 
 import { cilindro_AH, cilindro_ovalo, cilindro_redondo, cilindro_C1, cilindro_RSM, relleno_palanquilla } from './cilindro.js';
@@ -154,11 +132,6 @@ function renderizarPagina(p, contenedor) {
     //_j_ ahora quiero añadir R_Tabla, que es el radio de la tabla del cilindro. max_R_Tabla, min_R_Tabla
    filasTablaHTML += `<tr style="border-bottom: 1px solid #dee2e6;"><td style="padding: 6px 0; font-weight: bold;">R_Tabla:</td><td style="padding: 6px 0; text-align: right;">${R_Tabla.toFixed(2)} (${(R_Tabla_original).toFixed(2)}) mm</td></tr>`;
 
-   
-
-    
-    
-
     let controlesHTML = generarHTMLControles(p);
 
     card.innerHTML = `
@@ -183,7 +156,8 @@ function renderizarPagina(p, contenedor) {
                     </tbody>
                 </table>
             </div>
-        </div>
+                <button class="btn-volver" data-id="${p.id}" style="width: 100%; background-color: #6c757d; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 1em; margin-top: 10px;">VOLVER</button>
+            </div>
     `;
 
     contenedor.appendChild(card);
@@ -304,7 +278,16 @@ function vincularEventosParametros(p, contenedor) {
             renderizarPagina(p, contenedor);
         });
     }
-}
+    //_j_ Seleccionar el botón usando el punto (.) porque es una clase CSS
+    const btnVolver = contenedor.querySelector('.btn-volver');
+    if (btnVolver) {
+        btnVolver.addEventListener('click', () => {
+           /*
+           _ja_ window.history.back(); //_j_ vuelve atrás
+           */
+            window.close(); //_j_ Cierra la pestaña actual
+        });
+    }
 
 // Función auxiliar para persistir los cambios de la pasada
 function guardarModificacionesEnStorage(p) {
@@ -321,4 +304,6 @@ function guardarModificacionesEnStorage(p) {
         R_Tabla_modificado: p.R_Tabla_modificado,
     };
     localStorage.setItem(`pasada_${p.id}`, JSON.stringify(datosModificados));
+}
+
 }
