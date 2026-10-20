@@ -1,36 +1,70 @@
 /* pasadas.js */
 
-const n_puntos = 40;
 
 // 1. Base de datos para luces y factores de transformación por palanquilla
-export function luces_R_palanquilla() {
-    const luces_BDM = [
-        { palanquilla: 130, pasadas: [ { id: "AH", Valor_luz: 13.1, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 13.2, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 13.3, max_R_nom: 400, min_R_nom: 100 } ],},
-        { palanquilla: 140, pasadas: [ { id: "AH", Valor_luz: 14.1, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 14.2, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 14.3, max_R_nom: 400, min_R_nom: 100 } ],},
-        { palanquilla: 150, pasadas: [ { id: "AH", Valor_luz: 15.1, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 15.2, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 15.3, max_R_nom: 400, min_R_nom: 100 } ],},
-        { palanquilla: 160, pasadas: [ { id: "AH", Valor_luz: 16.1, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", Valor_luz: 16.2, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", Valor_luz: 16.3, max_R_nom: 400, min_R_nom: 100  } ] }
-    ];
+const n_puntos = 40;
 
-    const R_BDM = [ 
-        { palanquilla: 130, pasadas: [ { id: "AH", R_transfor: 1.3, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.3, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.3, max_R_nom: 400, min_R_nom: 100  } ],},
-        { palanquilla: 140, pasadas: [ { id: "AH", R_transfor: 1.4, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.4, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.4, max_R_nom: 400, min_R_nom: 100 } ],},
-        { palanquilla: 150, pasadas: [ { id: "AH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.5, max_R_nom: 400, min_R_nom: 100 } ],},
-        { palanquilla: 160, pasadas: [ { id: "AH", R_transfor: 1.6, max_R_nom: 400, min_R_nom: 100 }, { id: "BH", R_transfor: 1.6, max_R_nom: 400, min_R_nom: 100 }, { id: "CV", R_transfor: 1.6, max_R_nom: 400, min_R_nom: 100 } ] }
-    ];
+// Base de datos para luces y factores de transformación por palanquilla
+export async function luces_R_palanquilla(valorPalanquilla) {
+    console.log("🟢 Entrando en luces_R_palanquilla con palanquilla:", valorPalanquilla);
+    try {
+        const respuesta = await fetch('/json/config_luces_rs_BDM.json');
+        const jsonBDM = await respuesta.json();
 
-    const radioSeleccionado = document.querySelector('input[name="palanquilla"]:checked');
-    if (!radioSeleccionado) return { luces: [], R: [] };
+        // Si no se envía parámetro, intenta tomarlo del DOM o usa "150" por defecto
+        if (!valorPalanquilla) {
+            const radioSeleccionado = document.querySelector('input[name="palanquilla"]:checked');
+            valorPalanquilla = radioSeleccionado ? radioSeleccionado.value : "150";
+        }
 
-    const int_palan_selec = parseInt(radioSeleccionado.value, 10);
+        // Convertir a String para coincidir con las llaves del JSON ("130", "140", "150", "160")
+        const claveStr = String(valorPalanquilla).trim();
+        const datos = jsonBDM.BDM[claveStr]; // 'datos' es un Array [...]
 
-    const luz = luces_BDM.find(item => item.palanquilla === int_palan_selec);
-    const R = R_BDM.find(item => item.palanquilla === int_palan_selec);
+        if (!datos || !Array.isArray(datos)) {
+            console.warn("⚠️ No se encontraron datos para la palanquilla", claveStr);
+            return { luces: [], R: [] };
+        }
 
-    return {
-        luces: (luz && luz.pasadas) ? luz.pasadas : [],
-        R: (R && R.pasadas) ? R.pasadas : []
-    };
+        // Mostrar el contenido del array en consola correctamente
+        console.log("Palanquilla consultada:", claveStr);
+        console.log("Arreglo de pasadas encontrado:", datos);
+
+        const Luz = [];
+        const R = [];
+
+        // Procesar las pasadas del array
+        datos.forEach((item) => {
+            caja.push({
+                caja: item.pasada,
+                luz: .pasada,
+                R
+            })
+            
+            pasadasLuz.push({
+                id: item.pasada,        // "AH", "BH", "CV"
+                Valor_luz: item.luz     // ej: 10, 5
+            });
+
+            pasadasR.push({
+                id: item.pasada,        // "AH", "BH", "CV"
+                R_transfor: item.R      // ej: 1.5
+            });
+        });
+
+        return {
+            
+            luces: pasadasLuz,
+            R: pasadasR
+        };
+
+    } catch (error) {
+        console.error("Error al cargar o procesar el JSON de BDM:", error);
+        return { luces: [], R: [] };
+    }
 }
+
+
 
 // 2. Variable global para almacenar el estado actual mutable del array de pasadas
 export let pasadas_55 = [];

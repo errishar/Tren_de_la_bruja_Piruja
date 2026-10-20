@@ -6,10 +6,12 @@ import { simetria, calcularAreaDesdePuntos, aplicarLuz } from './calculos.js';
 import { graficarCilindroGenerico } from './grafica.js';
 import { pasadas_55, generarPasadas55 } from './pasadas.js';
 import { generarPerfilSalidaEkelund, generarPerfilSalidaEkelundZheng2, generarPerfilSalidaEkelundZheng, generarPerfilSalidaShinokura ,generarPerfilSalidaShinokura2, generarPerfilSalidaShinokura3, generarPerfilSalidaZheng, rotarSalidaAEntrada, generarPerfilSalidaTafelSedlaczek, generarPerfilSalidaKoncevicz } from './calculo_laminación.js';
+import {luces_R_palanquilla} from './pasadas_copy.js';
+ 
 
 const n_puntos = 40;
 
-function actualizarPasadas() {
+async function actualizarPasadas() {
     const contenedor = document.getElementById("contenedor-tablas");
     if (!contenedor) return;
 
@@ -19,8 +21,10 @@ function actualizarPasadas() {
     //_j_ 1. Obtener palanquilla seleccionada y área inicial
     let radioSeleccionado = document.querySelector('input[name="palanquilla"]:checked');
     let valorPalanquilla = radioSeleccionado ? parseFloat(radioSeleccionado.value) : 150;
+    const palanquilla_elegida = await luces_R_palanquilla(valorPalanquilla);
+    console.log("Palaquilla_elegida: ", palanquilla_elegida );
     let rellenocuadrante = relleno_palanquilla(valorPalanquilla, n_puntos);
-    console.log("Panaquilla: ", rellenocuadrante );
+    //_ja_ console.log("Panaquilla: ", rellenocuadrante );
     let areaEntradaTotal = calcularAreaDesdePuntos(rellenocuadrante.X, rellenocuadrante.Y);
 
     contenedor.innerHTML = "";
@@ -59,11 +63,11 @@ function actualizarPasadas() {
         if (p.tipo === "AH") {
             let mu = 0.35;
             
-            console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
-            console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
-            console.log("luzVal",p.nombre,": ", luzVal);
-            console.log("R_nom",p.nombre,": ", R_Tabla);
-            console.log("mu",p.nombre,": ",mu);
+            //_ja_ console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
+            //_ja_ console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
+            //_ja_ console.log("luzVal",p.nombre,": ", luzVal);
+            //_ja_ console.log("R_nom",p.nombre,": ", R_Tabla);
+            //_ja_ console.log("mu",p.nombre,": ",mu);
             
             
             rellenocuadrante = generarPerfilSalidaEkelundZheng2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
@@ -82,11 +86,11 @@ function actualizarPasadas() {
         } else {
         let alpha = 0.85;
        
-        console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
-        console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
-        console.log("luzVal",p.nombre,": ", luzVal);
-        console.log("R_nom",p.nombre,": ", R_Tabla);
-        console.log("alpha",p.nombre,": ",alpha);
+        //_ja_ console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
+        //_ja_ console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
+        //_ja_ console.log("luzVal",p.nombre,": ", luzVal);
+        //_ja_ console.log("R_nom",p.nombre,": ", R_Tabla);
+        //_ja_ console.log("alpha",p.nombre,": ",alpha);
 
         if (p.nombre !="BH" && p.nombre !="CV" ){
         rellenocuadrante = rotarSalidaAEntrada(rellenocuadrante);
@@ -293,7 +297,11 @@ function vincularEventosControles() { //_j_ función que recoge los eventos
 
 //_j_ ESTO ES LA FUNCIÓN PRINCIPAL, EL "MAIN" DE TODO
 
-document.addEventListener("DOMContentLoaded", () => {
+
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    
     // 1. Ejecución inicial al cargar la página
     generarPasadas55();
     actualizarPasadas(); // O la función que dibuje/actualice las tarjetas en tu index.html

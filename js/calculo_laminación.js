@@ -436,7 +436,7 @@ export function generarPerfilSalidaEkelundZheng2(perfilCilindro, P_in, g, R_nom,
     cos_angulo = Math.max(-1, Math.min(1, cos_angulo)); 
     let angulo_mordedura_rad = Math.acos(cos_angulo);
     let angulo_mordedura_deg = angulo_mordedura_rad * (180 / Math.PI); // Convertir a grados
-    console.log("Ángulo de mordedura (Ekelund):", angulo_mordedura_deg.toFixed(2), "°");
+    //_Ja_console.log("Ángulo de mordedura (Ekelund):", angulo_mordedura_deg.toFixed(2), "°");
     // ----------------------------------------------
 
     
@@ -542,7 +542,7 @@ export function generarPerfilSalidaShinokura3(perfilCilindro, P_in, g, R_nom, al
     let angulo_mordedura_deg = Math.acos(cos_angulo) * (180 / Math.PI);
     
     // Log para verificar en consola
-    console.log(`Ángulo de mordedura (Shinokura): ${angulo_mordedura_deg.toFixed(2)}° | Reducción: ${dH_eq.toFixed(2)} mm`);
+    //_Ja_console.log(`Ángulo de mordedura (Shinokura): ${angulo_mordedura_deg.toFixed(2)}° | Reducción: ${dH_eq.toFixed(2)} mm`);
     // ----------------------------------------------
 
     // Cálculo del ensanchamiento según Shinokura

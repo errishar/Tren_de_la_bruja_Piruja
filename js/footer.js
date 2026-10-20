@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         contenedorFooter.innerHTML = `
             <img src="./img/piruja.jpg" alt="">
             <h3>Tren de la bruja Piruja</h3>
-            <p class="txtRegistro">ver:1.2 © Chilindri.GmBH</p>
+            <p class="txtRegistro">ver:1.3 © Chilindri.GmBH</p>
             <p class="txtRegistro">Sale mal el modelo óvalo-redondo</p>
         `;
     }
