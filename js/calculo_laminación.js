@@ -353,7 +353,148 @@ export function generarPerfilSalidaEkelundZheng(perfilCilindro, P_in, g, R_nom, 
         Y: Y_out
     };
 }
+/** 
+ * Genera el perfil de salida para la Caja AH usando el Modelo de Ekelund Modificado.
+ * Recibe únicamente las coordenadas (X, Y) del primer cuadrante de entrada.
+ * 
+ * @param {Object} perfilCilindro - { X, Y } devuelto por tu función cilindro_AH
+ * @param {Object} P_in - { X, Y } de la barra de entrada en el primer cuadrante
+ * @param {number} g - Luz total entre cilindros (mm)
+ * @param {number} R_nom - Radio nominal del cilindro (mm)
+ * @param {number} mu - Coeficiente de fricción (ej. 0.35 para acero de alto carbono en caliente)
+ * @param {number} n_puntos_libre - Puntos para discretizar la zona libre de abombamiento
+ */
+export function generarPerfilSalidaEkelundZheng2(perfilCilindro, P_in, g, R_nom, mu = 0.35, n_puntos_libre = 25) {
+    const half_g = g / 2;
+    const X_c = perfilCilindro.X;
+    const Y_c = perfilCilindro.Y;
+    const Y_luz = Y_c.map(y => y + half_g);
 
+    const X_in = P_in.X;
+    const Y_in = P_in.Y;
+
+    // 1. Cálculo automático de W0 y A0
+    const half_W0 = Math.max(...X_in);
+    const W0 = 2 * half_W0;
+    const A0 = calcularAreaDesdePuntos(X_in, Y_in);
+
+    // Función interna para consultar la altura de entrada
+    const obtenerAlturaEn = function(x) {
+        let x_abs = Math.abs(x);
+        if (x_abs > half_W0) return 0;
+        for (let i = 0; i < X_in.length - 1; i++) {
+            if (x_abs >= X_in[i] && x_abs <= X_in[i + 1]) {
+                let t = (x_abs - X_in[i]) / (X_in[i + 1] - X_in[i]);
+                return 2 * (Y_in[i] + t * (Y_in[i + 1] - Y_in[i]));
+            }
+        }
+        return 2 * Y_in[Y_in.length - 1];
+    };
+
+    // 2. Cálculo de la reducción de área (Ah)
+    let y_c_suma = 0;
+    let n_contacto = 0;
+    let idx_contacto = 0;
+    let Ah = 0;
+
+    for (let i = 0; i < X_c.length; i++) {
+        let x = X_c[i];
+        if (x > half_W0) break;
+        
+        let H0_x = obtenerAlturaEn(x); 
+        let Y_canal_total = 2 * Y_luz[i];  
+        let dh = Math.max(0, H0_x - Y_canal_total);
+        
+        if (i > 0) {
+            let dx = X_c[i] - X_c[i - 1];
+            Ah += dh * dx;
+        }
+        
+        if (dh > 0) {
+            y_c_suma += Y_c[i];
+            n_contacto++;
+            idx_contacto = i;
+        }
+    }
+    
+    // Ah es la integral de la diferencia de altura. 
+    // Al estar dh en "altura total", multiplicar por 2 da el área de los 4 cuadrantes.
+    Ah = Ah * 2; 
+
+    // 3. Aplicación del Modelo de Ekelund Clásico (Mucho más estable para grandes reducciones)
+    const H0_eq = A0 / W0;
+    const dH_eq = Ah / W0;
+    const h1_eq = Math.max(0.1, H0_eq - dH_eq); // Evitar división por cero
+    
+    const y_c_media = n_contacto > 0 ? (y_c_suma / n_contacto) : 0;
+    const R_eff = R_nom - y_c_media; 
+    
+        // --- NUEVO: CÁLCULO DEL ÁNGULO DE MORDEDURA ---
+    // Fórmula: cos(ángulo) = 1 - (reducción de altura / (2 * radio))
+    let cos_angulo = 1 - (dH_eq / (2 * R_eff));
+    // Nos aseguramos de que el valor esté entre -1 y 1 para evitar errores de Math.acos
+    cos_angulo = Math.max(-1, Math.min(1, cos_angulo)); 
+    let angulo_mordedura_rad = Math.acos(cos_angulo);
+    let angulo_mordedura_deg = angulo_mordedura_rad * (180 / Math.PI); // Convertir a grados
+    console.log("Ángulo de mordedura (Ekelund):", angulo_mordedura_deg.toFixed(2), "°");
+    // ----------------------------------------------
+
+    
+    const m_eq = (1.6 * mu * Math.sqrt(R_eff * dH_eq)) / (H0_eq + h1_eq);
+    
+    let numerador = m_eq * dH_eq * Math.sqrt(R_eff * dH_eq);
+    let denominador = H0_eq + m_eq * h1_eq;
+    let delta_b = denominador > 0 ? (numerador / denominador) : 0;
+
+    // 4. Restricción física del canal
+    const half_W_canal_max = Math.max(...X_c);
+    const half_W1_calculado = (W0 + delta_b) / 2;
+    
+    // El material no puede rebasar el ancho máximo del canal
+    const half_W1 = Math.min(half_W1_calculado, half_W_canal_max);
+
+    // 5. Construcción de la matriz de puntos de salida
+    let X_out = [];
+    let Y_out = [];
+
+    // --- Zona de Contacto con el Calibre ---
+    for (let i = 0; i <= idx_contacto; i++) {
+        X_out.push(X_c[i]);
+        Y_out.push(Y_luz[i]);
+    }
+
+    const x_cont = X_out[X_out.length - 1];
+    const y_cont = Y_out[Y_out.length - 1];
+
+    // --- Zona Libre / Abombamiento Lateral ---
+    if (half_W1 > x_cont) {
+        let dx_libre = (half_W1 - x_cont) / n_puntos_libre;
+
+        for (let i = 1; i <= n_puntos_libre; i++) {
+            let x = x_cont + i * dx_libre;
+            let t = (x - x_cont) / (half_W1 - x_cont);
+            
+            // Curva parabólica de abombamiento
+            let y_parabola = y_cont - (y_cont - half_g) * Math.pow(t, 2);
+            
+            // Recorte contra el perfil del rodillo (usando interpolación segura)
+            let y_canal_max = interpolarY({ X: X_c, Y: Y_luz }, x);
+            let y_final = Math.min(y_parabola, y_canal_max);
+            y_final = Math.max(half_g, y_final); // Evitar bajar de la luz
+
+            X_out.push(x);
+            Y_out.push(y_final);
+        }
+    }
+
+    X_out = X_out.map(x => trunc(x, 2));
+    Y_out = Y_out.map(y => trunc(y, 2));
+
+    return {
+        X: X_out,
+        Y: Y_out
+    };
+}
 
 /**
  * Genera el perfil de salida usando el modelo de Shinokura y Takai.
@@ -366,7 +507,118 @@ export function generarPerfilSalidaEkelundZheng(perfilCilindro, P_in, g, R_nom, 
  * @param {number} alpha - Coeficiente de Shinokura (por defecto 0.85)
  * @param {number} n_puntos_libre - Puntos para discretizar la zona libre de abombamiento
  */
+export function generarPerfilSalidaShinokura3(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
+    const half_g = g / 2;
+    const X_c = perfilCilindro.X;
+    const Y_c = perfilCilindro.Y;
+    const Y_luz = Y_c.map(y => y + half_g);
 
+    const X_in = P_in.X;
+    const Y_in = P_in.Y;
+
+    // 1. Cálculo automático de W0 y A0 desde el primer cuadrante
+    const half_W0 = Math.max(...X_in);
+    const W0 = 2 * half_W0;
+    const A0 = calcularAreaDesdePuntos(X_in, Y_in);
+
+    // 2. Cálculo de dimensiones equivalentes (Alturas medias)
+    const H0_media = A0 / W0; // Altura media geométrica del material de entrada
+    const H_rodillo_max = 2 * Math.max(...Y_c); // Altura máxima del hueco del rodillo (fondo del canal)
+    
+    // Reducción de altura equivalente
+    const dH_eq = Math.max(0, H0_media - H_rodillo_max);
+    
+    // Área reducida (Área del material que se deforma contra el rodillo)
+    const Ah = Math.max(0, A0 - (W0 * H_rodillo_max));
+
+    // 3. Aplicación del Modelo de Shinokura y Takai
+    const y_c_media = Math.max(...Y_c) / 2;
+    const R_eff = R_nom - y_c_media; // Radio efectivo
+
+    // --- CÁLCULO DEL ÁNGULO DE MORDEDURA ---
+    let cos_angulo = 1 - (dH_eq / (2 * R_eff));
+    // Protección para evitar errores matemáticos
+    cos_angulo = Math.max(-1, Math.min(1, cos_angulo)); 
+    let angulo_mordedura_deg = Math.acos(cos_angulo) * (180 / Math.PI);
+    
+    // Log para verificar en consola
+    console.log(`Ángulo de mordedura (Shinokura): ${angulo_mordedura_deg.toFixed(2)}° | Reducción: ${dH_eq.toFixed(2)} mm`);
+    // ----------------------------------------------
+
+    // Cálculo del ensanchamiento según Shinokura
+    const factorGeometria = Math.sqrt(R_eff * dH_eq) / (W0 + 0.5 * H0_media);
+    const W1 = W0 * (1 + alpha * (Ah / A0) * factorGeometria);
+    const half_W1 = W1 / 2;
+    
+    // Restricción física del ancho del rodillo
+    const half_W_canal_max = Math.max(...X_c);              
+    const half_W1_efectivo = Math.min(half_W1, half_W_canal_max);  
+
+    // 4. Construcción de la matriz de puntos de salida (X_out, Y_out)
+    let X_out = [];
+    let Y_out = [];
+
+    // Buscar hasta dónde llega la zona de contacto real (donde la parábola tocaría el rodillo)
+    let idx_contacto = 0;
+    for (let i = 0; i < X_c.length; i++) {
+        if (X_c[i] <= half_W1_efectivo) {
+            idx_contacto = i;
+        } else {
+            break;
+        }
+    }
+
+    // --- Zona de Contacto con el Calibre ---
+    for (let i = 0; i <= idx_contacto; i++) {
+        X_out.push(X_c[i]);
+        Y_out.push(Y_luz[i]);
+    }
+
+    const x_cont = X_out[X_out.length - 1];
+    const y_cont = Y_out[Y_out.length - 1];
+
+    // --- Zona Libre / Abombamiento Lateral (*Free Surface Bulging*) ---
+    if (half_W1_efectivo > x_cont) {
+        let dx_libre = (half_W1_efectivo - x_cont) / n_puntos_libre;
+
+        for (let i = 1; i <= n_puntos_libre; i++) {
+            let x = x_cont + i * dx_libre;
+            let t = (x - x_cont) / (half_W1_efectivo - x_cont);
+            
+            // Parábola natural de abombamiento
+            let y_parabola = y_cont - (y_cont - half_g) * Math.pow(t, 2);
+            
+            // Altura del rodillo en ese punto X (usando interpolación segura)
+            let y_canal_max = interpolarY({ X: X_c, Y: Y_luz }, x);
+
+            // Si el acero intenta salirse del rodillo, se ciñe a él (no lo atraviesa)
+            let y_final = Math.min(y_parabola, y_canal_max);
+            y_final = Math.max(half_g, y_final); // No bajar de la luz
+
+            X_out.push(x);
+            Y_out.push(y_final);
+        }
+    }
+
+    X_out = X_out.map(x => trunc(x, 2));
+    Y_out = Y_out.map(y => trunc(y, 2));        
+
+    return {
+        X: X_out,
+        Y: Y_out
+    };
+}
+/**
+ * Genera el perfil de salida usando el modelo de Shinokura y Takai.
+ * Recibe únicamente las coordenadas (X, Y) del primer cuadrante de entrada.
+ * 
+ * @param {Object} perfilCilindro - { X, Y } devuelto por tu función de cilindro (ej. óvalo/redondo)
+ * @param {Object} P_in - { X, Y } de la barra de entrada en el primer cuadrante
+ * @param {number} g - Luz total entre cilindros (mm)
+ * @param {number} R_nom - Radio nominal del cilindro (mm)
+ * @param {number} alpha - Coeficiente de Shinokura (por defecto 0.85)
+ * @param {number} n_puntos_libre - Puntos para discretizar la zona libre de abombamiento
+ */
 export function generarPerfilSalidaShinokura2(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
     const half_g = g / 2;
     const X_c = perfilCilindro.X;
@@ -475,6 +727,17 @@ export function generarPerfilSalidaShinokura2(perfilCilindro, P_in, g, R_nom, al
         Y: Y_out
     };
 }
+/**
+ * Genera el perfil de salida usando el modelo de Shinokura y Takai.
+ * Recibe únicamente las coordenadas (X, Y) del primer cuadrante de entrada.
+ * 
+ * @param {Object} perfilCilindro - { X, Y } devuelto por tu función de cilindro (ej. óvalo/redondo)
+ * @param {Object} P_in - { X, Y } de la barra de entrada en el primer cuadrante
+ * @param {number} g - Luz total entre cilindros (mm)
+ * @param {number} R_nom - Radio nominal del cilindro (mm)
+ * @param {number} alpha - Coeficiente de Shinokura (por defecto 0.85)
+ * @param {number} n_puntos_libre - Puntos para discretizar la zona libre de abombamiento
+ */
 export function generarPerfilSalidaShinokura(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
 
     const half_g = g / 2;

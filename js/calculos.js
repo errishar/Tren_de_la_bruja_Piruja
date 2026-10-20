@@ -191,7 +191,7 @@ export function calcular_X(perfil, areaObjetivo) {
  * @param {number } xVal 
  * @returns {}
  */
-export function interpolarY(perfil, xVal) {
+export function interpolarY2(perfil, xVal) {
     const X = perfil.X;
     const Y = perfil.Y;
 
@@ -208,6 +208,24 @@ export function interpolarY(perfil, xVal) {
     return Y[Y.length - 1];
 }
 
+export function interpolarY(perfil, xVal) {
+    const X = perfil.X;
+    const Y = perfil.Y;
+
+    if (X.length === 0) return 0;
+    if (xVal <= X[0]) return Y[0];
+    if (xVal >= X[X.length - 1]) return Y[Y.length - 1];
+
+    for (let i = 0; i < X.length - 1; i++) {
+        let dx = X[i + 1] - X[i];
+        if (Math.abs(dx) < 1e-9) continue;   // ← ÚNICO CAMBIO
+        if (xVal >= X[i] && xVal <= X[i + 1]) {
+            let t = (xVal - X[i]) / dx;
+            return Y[i] + t * (Y[i + 1] - Y[i]);
+        }
+    }
+    return Y[Y.length - 1];
+}
 
 /**
  * Calcula el área transversal completa a partir de los puntos del 1er cuadrante

@@ -5,7 +5,7 @@ import { cilindro_AH, cilindro_ovalo, cilindro_redondo, cilindro_C1, cilindro_RS
 import { simetria, calcularAreaDesdePuntos, aplicarLuz } from './calculos.js';
 import { graficarCilindroGenerico } from './grafica.js';
 import { pasadas_55, generarPasadas55 } from './pasadas.js';
-import { generarPerfilSalidaEkelund, generarPerfilSalidaEkelundZheng, generarPerfilSalidaShinokura ,generarPerfilSalidaShinokura2, generarPerfilSalidaZheng, rotarSalidaAEntrada, generarPerfilSalidaTafelSedlaczek, generarPerfilSalidaKoncevicz } from './calculo_laminación.js';
+import { generarPerfilSalidaEkelund, generarPerfilSalidaEkelundZheng2, generarPerfilSalidaEkelundZheng, generarPerfilSalidaShinokura ,generarPerfilSalidaShinokura2, generarPerfilSalidaShinokura3, generarPerfilSalidaZheng, rotarSalidaAEntrada, generarPerfilSalidaTafelSedlaczek, generarPerfilSalidaKoncevicz } from './calculo_laminación.js';
 
 const n_puntos = 40;
 
@@ -20,6 +20,7 @@ function actualizarPasadas() {
     let radioSeleccionado = document.querySelector('input[name="palanquilla"]:checked');
     let valorPalanquilla = radioSeleccionado ? parseFloat(radioSeleccionado.value) : 150;
     let rellenocuadrante = relleno_palanquilla(valorPalanquilla, n_puntos);
+    console.log("Panaquilla: ", rellenocuadrante );
     let areaEntradaTotal = calcularAreaDesdePuntos(rellenocuadrante.X, rellenocuadrante.Y);
 
     contenedor.innerHTML = "";
@@ -57,18 +58,21 @@ function actualizarPasadas() {
     
         if (p.tipo === "AH") {
             let mu = 0.35;
-            /*
-            _Ja_ console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
-            _Ja_ console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
-            _Ja_ console.log("luzVal",p.nombre,": ", luzVal);
-            _Ja_ console.log("R_nom",p.nombre,": ", R_nom);
-            _Ja_console.log("mu",p.nombre,": ",mu);
-            */
             
-            rellenocuadrante = generarPerfilSalidaEkelundZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
+            console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
+            console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
+            console.log("luzVal",p.nombre,": ", luzVal);
+            console.log("R_nom",p.nombre,": ", R_Tabla);
+            console.log("mu",p.nombre,": ",mu);
+            
+            
+            rellenocuadrante = generarPerfilSalidaEkelundZheng2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
             /*
                 _M_ rellenocuadrante = generarPerfilSalidaEkelundZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
+                _M_ rellenocuadrante = generarPerfilSalidaEkelundZheng2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
                 _M_ rellenocuadrante = generarPerfilSalidaShinokura(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+                _M_ rellenocuadrante = generarPerfilSalidaShinokura2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+                _M_ rellenocuadrante = generarPerfilSalidaShinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
                 _M_ rellenocuadrante =generarPerfilSalidaTafelSedlaczek(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
                 _M_ rellenocuadrante = generarPerfilSalidaKoncevicz(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
                 _M_ rellenocuadrante = generarPerfilSalidaZheng(perfilCilindro, P_in, g, R_Tabla, m_material = 1.25, gamma = 0.97, maxIter = 3);
@@ -77,20 +81,22 @@ function actualizarPasadas() {
             rTransVal = areaEntradaTotal/areaSalidaTotal ;
         } else {
         let alpha = 0.85;
-        /*
-        _Ja_console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
-        _Ja_console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
-        _Ja_console.log("luzVal",p.nombre,": ", luzVal);
-        _Ja_console.log("R_nom",p.nombre,": ", R_nom);
-        _Ja_console.log("alpha",p.nombre,": ",alpha);*/
+       
+        console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
+        console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
+        console.log("luzVal",p.nombre,": ", luzVal);
+        console.log("R_nom",p.nombre,": ", R_Tabla);
+        console.log("alpha",p.nombre,": ",alpha);
 
         if (p.nombre !="BH" && p.nombre !="CV" ){
         rellenocuadrante = rotarSalidaAEntrada(rellenocuadrante);
         }
 
-        rellenocuadrante = generarPerfilSalidaZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, 1.25, (p.tipo === "redondo") ? 0.83 : 0.97, 3);
+        rellenocuadrante = generarPerfilSalidaShinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
         /* 
             _M_ rellenocuadrante = generarPerfilSalidaShinokura(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+            _M_ rellenocuadrante = generarPerfilSalidaShinokura2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+            _M_ rellenocuadrante = generarPerfilSalidaShinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
             _M_ rellenocuadrante =generarPerfilSalidaTafelSedlaczek(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
             _M_ rellenocuadrante = generarPerfilSalidaKoncevicz(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
             _M_ rellenocuadrante = generarPerfilSalidaZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, 1.25, (p.tipo === "redondo") ? 0.83 : 0.97, 3);
