@@ -8,23 +8,68 @@ html{font: 10px}
             background-color: #f8f9fa;
         }
 
-        .txtRegitro {
+        .logo{
+            display: flex;
+            flex-direction: column;   /* Coloca los elementos uno debajo del otro */
+            justify-content: center;  /* Centra el contenido verticalmente si el contenedor tiene altura */
+            align-items: center;      /* Centra la imagen y el texto horizontalmente */
+            text-align: center;  
+        }
+        .titulo_tren_de_la_bruja{ /*_C_ TItulo Fuerza al navegador este tamaño de letra*/
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+            font-size: 30px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+
+    }
+    /* Selector corregido (sin el punto inicial) para aplicar el 50% */
+    .logo img {
+        width: 25%;                 /* Ocupa exactamente la mitad de su contenedor */
+        height: auto;               /* Mantiene la proporción original */
+        display: block;             /* Evita espacios en blanco extra debajo */
+        aspect-ratio: 1/1;          /* Conserva tu formato cuadrado si lo requieres */
+        object-fit: cover;          
+        box-shadow: 0 3px 8px rgba(160, 5, 5, 0.15);
+        transition: 0.3s;
+    }
+        .mensaje_desarrollador{ /*_C_ TItulo Fuerza al navegador este tamaño de letra*/
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+            font-size: 20px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+    }
+
+        
+        .txtMensaje {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+            font-size: 15px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+        }
+        
+        .titulo_Palanquilla_entrada{
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+            font-size: 20px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+
+        }
+        .celda_palanquilla{
+            border: 5px #830808;
+            border-top :#007bff
+
+        }
+        
+        
+        
+        .txtRegistro {
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f8f9fa;
             font-size: 18px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
         }
 
-        img{
-            width: 100px;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            max-width: 100%;
-            height: auto;
-            /*border-radius: 50%;*/
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-            transition: 0.3s;
-        }
+        
 
 
 
@@ -64,14 +109,14 @@ html{font: 10px}
         }
 
         .tabla-cilindro th {
-            background-color: #007bff;
-            color: white;
+            background-color: #830808;
+            color: rgb(129, 55, 55);
         }
 
         .grafica-container {
             width: 100%;
             margin: 0 auto;
-            cursor: "/img/bruja.png"; /*_C_ O 'url("tu-imagen.png") 16x16, auto' para un dibujo personalizado */
+            cursor: url("img/bruja.png") 16 16, auto; /* Sintaxis corregida */
         }
         
 

@@ -13,27 +13,32 @@
     <!-- Añadimos ?v=3 al final para obligar al navegador a descartar el script viejo -->
     <script src="js/rastreador.js?v=4:10"></script>
     <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        iniciarRastreo();
-    });
-</script>
+        window.addEventListener('DOMContentLoaded', () => {
+            iniciarRastreo();
+        });
+    </script>
 
     <link rel="stylesheet" href="./css/estilo.css">
+    
 </head>
 <body>
     <header style="max-width: 1600px; margin: 0 auto 20px auto;">
+        <h1>Análisis de Perfil de Laminación</h1>
+    </header>
+    
+
+    <Navigation style="max-width: 1600px; margin: 0 auto 20px auto;">
         <table>
             <td>
-                <script src="js/footer.js"></script>
-                <div id="membrete"></div>
+                <div id="membrete">
+                    <script src="js/encabezado.js"></script>
+                    <div id="membrete"></div>
+                </div>
+    
             </td>
-            <td>
-                <h1>Análisis de Perfil de Laminación</h1>
-                
-            </td>
-            <td>
-                <fieldset>
-                    <legend>Palanquilla de entrada
+            <td >
+                <fieldset class="celda_palanquilla">
+                    <legend class="titulo_Palanquilla_entrada">Palanquilla de entrada
                         
                     </legend>
                     <div>
@@ -60,14 +65,19 @@
             
         </table>
                
-    </header>
+    </Navigation>
 
     <main>
-        <!--_H_ CONTENEDOR EN 2 COLUMNAS -->
+        <!-- Contenedor dinámico requerido por tus scripts principales -->
         <div id="contenedor-tablas"></div>
-    </main>
 
-    <!--_H_ Carga del script principal -->
-    <script type="module" src="./js/lamina_3.js"></script>
+        <!-- Carga del script principal como módulo -->
+        <script type="module" src="./js/lamina_3.js"></script>
+    
+    </main>
+    <footer id="pie">
+        <script src="./js/pie_de_pagina.js"></script>
+    </footer>
+
 </body>
 </html>
