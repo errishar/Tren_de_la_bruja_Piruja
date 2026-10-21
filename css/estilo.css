@@ -1,10 +1,10 @@
 *{box-sizing: border-box;}
 
-html{font: 10px}
+html{font: 5px}
 
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 1rem;
             background-color: #f8f9fa;
         }
 
@@ -17,56 +17,69 @@ html{font: 10px}
         }
         .titulo_tren_de_la_bruja{ /*_C_ TItulo Fuerza al navegador este tamaño de letra*/
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 1rem;
             background-color: #f8f9fa;
-            font-size: 30px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+            font-size: 1.4rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
 
     }
     /* Selector corregido (sin el punto inicial) para aplicar el 50% */
-    .logo img {
-        width: 25%;                 /* Ocupa exactamente la mitad de su contenedor */
-        height: auto;               /* Mantiene la proporción original */
-        display: block;             /* Evita espacios en blanco extra debajo */
-        aspect-ratio: 1/1;          /* Conserva tu formato cuadrado si lo requieres */
-        object-fit: cover;          
-        box-shadow: 0 3px 8px rgba(160, 5, 5, 0.15);
-        transition: 0.3s;
-    }
+        .logo img {
+            width: 20%;
+            max-width: 100%;                 /* Ocupa exactamente la mitad de su contenedor */
+            height: auto;               /* Mantiene la proporción original */
+            display: block;             /* Evita espacios en blanco extra debajo */
+            aspect-ratio: 1/1;          /* Conserva tu formato cuadrado si lo requieres */
+            object-fit: cover;          
+            box-shadow: 0.20rem 0.2rem rgba(160, 5, 5, 0.15);
+            transition: 0.3s;
+        }
+        /* Asegurar que las imágenes y elementos multimedia no rompan la pantalla */
+        .img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
         .mensaje_desarrollador{ /*_C_ TItulo Fuerza al navegador este tamaño de letra*/
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 1rem;
             background-color: #f8f9fa;
-            font-size: 20px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+            font-size: 1.2rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
     }
 
         
         .txtMensaje {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 1.2rem;
             background-color: #f8f9fa;
-            font-size: 15px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+            font-size: 1rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
         }
         
         .titulo_Palanquilla_entrada{
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin:1rem;
             background-color: #f8f9fa;
-            font-size: 20px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+            font-size: 1.8rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
 
         }
         .celda_palanquilla{
-            border: 5px #830808;
-            border-top :#007bff
-
+            border: 0.1rem solid #830808;
+           
         }
         
+        .palanquilla{
+            font-family: Arial, sans-serif;
+            margin: 0.5rem;
+            background-color: #f8f9fa;
+            font-size: 1.2rem !important;
+            text-align: left;
+        }
         
         
         .txtRegistro {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 1rem
             background-color: #f8f9fa;
-            font-size: 18px !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+            font-size: 1rem!important; /*_C_ Fuerza al navegador este tamaño de letra*/
         }
 
         
@@ -74,14 +87,15 @@ html{font: 10px}
 
 
 
-        /*_c_ 1. CONTENEDOR PRINCIPAL EN 2 COLUMNAS */
+        /*_c_ 1. CONTENEDOR PRINCIPAL EN 2 COLUMNAS (Escritorio)*/
         #contenedor-tablas {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Crea 2 columnas de igual ancho */
-            gap: 20px; /* Espaciado uniforme entre cajas */
+            grid-template-columns: repeat(2, 1fr); /* 2 columnas de igual ancho */
+            gap: 20px; /* Espaciado uniforme */
             width: 100%;
             max-width: 1600px;
             margin: 0 auto;
+            box-sizing: border-box;
         }
 
         /*_c_ 2. TARJETAS/CARDS ADAPTADAS A SU COLUMNA */
@@ -90,7 +104,7 @@ html{font: 10px}
             border: 1px solid #ced4da;
             border-radius: 8px;
             padding: 20px;
-            margin: 0; /* Desactivar margen auto para dejar trabajar al grid */
+            margin: 0;
             width: 100%;
             box-sizing: border-box;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -98,8 +112,8 @@ html{font: 10px}
 
         .tabla-cilindro {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+            max-width: 100%;
+            margin: 0 auto;
         }
 
         .tabla-cilindro th, .tabla-cilindro td {
@@ -122,9 +136,8 @@ html{font: 10px}
 
         /*_c_ 3. RESPONSIVO: Pasa a 1 columna en pantallas de tableta/móvil */
         @media (max-width: 1024px) {
-            #contenedor-tablas {
-                grid-template-columns: 1fr;
-            }
+        body {
+        margin: 10px; /* Reduce los márgenes generales en pantallas pequeñas */
         }
         
 
@@ -135,3 +148,4 @@ html{font: 10px}
         .input-luz-num,
         .btn-reset-param,
         .btn-reset-todo {cursor: url("img/bruja.png") 16 16, pointer !important;}
+
