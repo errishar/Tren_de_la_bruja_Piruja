@@ -62,7 +62,23 @@
                     </div>
                 </fieldset>
             </td>
-            
+            <td>
+                <td>
+                    <div class="caja_perfil" ; flex-wrap: wrap;">
+                        <!-- Selector de Perfil -->
+                         <script src="js/pasadas_copy.js"></script>
+                        <div>
+                            <p class="avisos">Aun en construcción</p>
+                            <label for="selectPerfil"><p class="label_combobox_perfil">Perfil:</p></label>
+                            <select class="combobox_perfil" id="selectPerfil">
+                                <option value="">-- Perfil --</option>
+                            </select>
+                        </div>
+
+                        <!-- Zona dinámica donde aparecerán RSM_a y Configuración si el perfil los tiene -->
+                        <div id="zonaSelectsDinamicos" style="display: flex; gap: 15px; align-items: center;"></div>
+                    </div>
+            </td>
         </table>
                
     </Navigation>

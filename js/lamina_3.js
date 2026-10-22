@@ -20,7 +20,7 @@ function actualizarPasadas() {
     let radioSeleccionado = document.querySelector('input[name="palanquilla"]:checked');
     let valorPalanquilla = radioSeleccionado ? parseFloat(radioSeleccionado.value) : 150;
     let rellenocuadrante = relleno_palanquilla(valorPalanquilla, n_puntos);
-    console.log("Panaquilla: ", rellenocuadrante );
+    // _Ja_  console.log("Panaquilla: ", rellenocuadrante );
     let areaEntradaTotal = calcularAreaDesdePuntos(rellenocuadrante.X, rellenocuadrante.Y);
 
     contenedor.innerHTML = "";
@@ -59,11 +59,11 @@ function actualizarPasadas() {
         if (p.tipo === "AH") {
             let mu = 0.35;
             
-            console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
-            console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
-            console.log("luzVal",p.nombre,": ", luzVal);
-            console.log("R_nom",p.nombre,": ", R_Tabla);
-            console.log("mu",p.nombre,": ",mu);
+            // _Ja_ console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
+            // _Ja_ console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
+            // _Ja_ console.log("luzVal",p.nombre,": ", luzVal);
+            // _Ja_ console.log("R_nom",p.nombre,": ", R_Tabla);
+            // _Ja_ console.log("mu",p.nombre,": ",mu);
             
             
             rellenocuadrante = generarPerfilSalidaEkelundZheng2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
@@ -82,11 +82,11 @@ function actualizarPasadas() {
         } else {
         let alpha = 0.85;
        
-        console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
-        console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
-        console.log("luzVal",p.nombre,": ", luzVal);
-        console.log("R_nom",p.nombre,": ", R_Tabla);
-        console.log("alpha",p.nombre,": ",alpha);
+        // _Ja_ console.log("rellenocuadrante",p.nombre,": ", rellenocuadrante);
+        // _Ja_ console.log("perfilCuadrante",p.nombre,": ", perfilCuadrante);
+        // _Ja_ console.log("luzVal",p.nombre,": ", luzVal);
+        // _Ja_ console.log("R_nom",p.nombre,": ", R_Tabla);
+        // _Ja_ console.log("alpha",p.nombre,": ",alpha);
 
         if (p.nombre !="BH" && p.nombre !="CV" ){
         rellenocuadrante = rotarSalidaAEntrada(rellenocuadrante);

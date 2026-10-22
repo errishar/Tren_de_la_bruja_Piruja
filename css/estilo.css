@@ -2,91 +2,28 @@
 
 html{font: 5px}
 
-        body {
+        .avisos{
             font-family: Arial, sans-serif;
-            margin: 1rem;
-            background-color: #f8f9fa;
-        }
-
-        .logo{
-            display: flex;
-            flex-direction: column;   /* Coloca los elementos uno debajo del otro */
-            justify-content: center;  /* Centra el contenido verticalmente si el contenedor tiene altura */
-            align-items: center;      /* Centra la imagen y el texto horizontalmente */
-            text-align: center;  
-        }
-        .titulo_tren_de_la_bruja{ /*_C_ TItulo Fuerza al navegador este tamaño de letra*/
-            font-family: Arial, sans-serif;
-            margin: 1rem;
-            background-color: #f8f9fa;
-            font-size: 1.4rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
-
-    }
-    /* Selector corregido (sin el punto inicial) para aplicar el 50% */
-        .logo img {
-            width: 20%;
-            max-width: 100%;                 /* Ocupa exactamente la mitad de su contenedor */
-            height: auto;               /* Mantiene la proporción original */
-            display: block;             /* Evita espacios en blanco extra debajo */
-            aspect-ratio: 1/1;          /* Conserva tu formato cuadrado si lo requieres */
-            object-fit: cover;          
-            box-shadow: 0.20rem 0.2rem rgba(160, 5, 5, 0.15);
-            transition: 0.3s;
-        }
-        /* Asegurar que las imágenes y elementos multimedia no rompan la pantalla */
-        .img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-        .mensaje_desarrollador{ /*_C_ TItulo Fuerza al navegador este tamaño de letra*/
-            font-family: Arial, sans-serif;
-            margin: 1rem;
-            background-color: #f8f9fa;
-            font-size: 1.2rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
-    }
-
-        
-        .txtMensaje {
-            font-family: Arial, sans-serif;
-            margin: 1.2rem;
-            background-color: #f8f9fa;
-            font-size: 1rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+            margin: 0.1rem;
+            background-color: yellow;
+            color: red;
+            font-size: 2rem!important; /*_C_ Fuerza al navegador este tamaño de letra*/
         }
         
-        .titulo_Palanquilla_entrada{
+        .body {
             font-family: Arial, sans-serif;
-            margin:1rem;
+            margin: 1rem;
             background-color: #f8f9fa;
-            font-size: 1.8rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+        }
 
+       
+        .caja_perfil{
+            border: 0.3rem dashed red;
         }
         .celda_palanquilla{
             border: 0.1rem solid #830808;
            
         }
-        
-        .palanquilla{
-            font-family: Arial, sans-serif;
-            margin: 0.5rem;
-            background-color: #f8f9fa;
-            font-size: 1.2rem !important;
-            text-align: left;
-        }
-        
-        
-        .txtRegistro {
-            font-family: Arial, sans-serif;
-            margin: 1rem
-            background-color: #f8f9fa;
-            font-size: 1rem!important; /*_C_ Fuerza al navegador este tamaño de letra*/
-        }
-
-        
-
-
-
-
         /*_c_ 1. CONTENEDOR PRINCIPAL EN 2 COLUMNAS (Escritorio)*/
         #contenedor-tablas {
             display: grid;
@@ -109,6 +46,66 @@ html{font: 5px}
             box-sizing: border-box;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        
+        .combobox_perfil{
+            font-family: Arial, sans-serif;
+            margin: 0.2rem;
+            background-color: #f8f9fa;
+            font-size: 1.2rem!important; /*_C_ Fuerza al navegador este tamaño de letra*/
+        }
+        .grafica-container {
+            width: 100%;
+            margin: 0 auto;
+            cursor: url("./img/bruja.png") 16 16, auto; /* Sintaxis corregida */
+        }
+
+         /* Asegurar que las imágenes y elementos multimedia no rompan la pantalla */
+        .img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .label_combobox_perfil{
+            font-family: Arial, sans-serif;
+            margin: 0.2rem;
+            background-color: #f8f9fa;
+            font-size: 1.5rem!important; /*_C_ Fuerza al navegador este tamaño de letra*/
+        }
+        .logo{
+            display: flex;
+            flex-direction: column;   /* Coloca los elementos uno debajo del otro */
+            justify-content: center;  /* Centra el contenido verticalmente si el contenedor tiene altura */
+            align-items: center;      /* Centra la imagen y el texto horizontalmente */
+            text-align: center;  
+        }
+        
+    /* Selector corregido (sin el punto inicial) para aplicar el 50% */
+        .logo img {
+            width: 20%;
+            max-width: 100%;                 /* Ocupa exactamente la mitad de su contenedor */
+            height: auto;               /* Mantiene la proporción original */
+            display: block;             /* Evita espacios en blanco extra debajo */
+            aspect-ratio: 1/1;          /* Conserva tu formato cuadrado si lo requieres */
+            object-fit: cover;          
+            box-shadow: 0.20rem 0.2rem rgba(160, 5, 5, 0.15);
+            transition: 0.3s;
+        }
+        .mensaje_desarrollador{ /*_C_ TItulo Fuerza al navegador este tamaño de letra*/
+            font-family: Arial, sans-serif;
+            margin: 1rem;
+            background-color: #f8f9fa;
+            font-size: 1.2rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+    }
+        .palanquilla{
+            font-family: Arial, sans-serif;
+            margin: 0.5rem;
+            background-color: #f8f9fa;
+            font-size: 1.2rem !important;
+            text-align: left;
+        }
+
+        
 
         .tabla-cilindro {
             width: 100%;
@@ -127,10 +124,32 @@ html{font: 5px}
             color: rgb(129, 55, 55);
         }
 
-        .grafica-container {
-            width: 100%;
-            margin: 0 auto;
-            cursor: url("img/bruja.png") 16 16, auto; /* Sintaxis corregida */
+        .titulo_Palanquilla_entrada{
+            font-family: Arial, sans-serif;
+            margin:1rem;
+            background-color: #f8f9fa;
+            font-size: 1.8rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+
+        }
+        .titulo_tren_de_la_bruja{ /*_C_ TItulo Fuerza al navegador este tamaño de letra*/
+            font-family: Arial, sans-serif;
+            margin: 1rem;
+            background-color: #f8f9fa;
+            font-size: 1.4rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+
+        }
+        .txtMensaje {
+            font-family: Arial, sans-serif;
+            margin: 1.2rem;
+            background-color: #f8f9fa;
+            font-size: 1rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
+        }
+        
+        .txtRegistro {
+            font-family: Arial, sans-serif;
+            margin: 1rem;
+            background-color: #f8f9fa;
+            font-size: 1rem!important; /*_C_ Fuerza al navegador este tamaño de letra*/
         }
         
 
