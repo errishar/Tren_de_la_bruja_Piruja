@@ -19,6 +19,7 @@ html{font: 5px}
        
         .caja_perfil{
             border: 0.3rem dashed red;
+            flex-wrap: wrap;
         }
         .celda_palanquilla{
             border: 0.1rem solid #830808;
@@ -72,6 +73,7 @@ html{font: 5px}
             background-color: #f8f9fa;
             font-size: 1.5rem!important; /*_C_ Fuerza al navegador este tamaño de letra*/
         }
+
         .logo{
             display: flex;
             flex-direction: column;   /* Coloca los elementos uno debajo del otro */
@@ -80,7 +82,7 @@ html{font: 5px}
             text-align: center;  
         }
         
-    /* Selector corregido (sin el punto inicial) para aplicar el 50% */
+        /* Selector corregido (sin el punto inicial) para aplicar el 50% */
         .logo img {
             width: 20%;
             max-width: 100%;                 /* Ocupa exactamente la mitad de su contenedor */
@@ -91,12 +93,14 @@ html{font: 5px}
             box-shadow: 0.20rem 0.2rem rgba(160, 5, 5, 0.15);
             transition: 0.3s;
         }
+
         .mensaje_desarrollador{ /*_C_ TItulo Fuerza al navegador este tamaño de letra*/
             font-family: Arial, sans-serif;
             margin: 1rem;
             background-color: #f8f9fa;
             font-size: 1.2rem !important; /*_C_ Fuerza al navegador este tamaño de letra*/
-    }
+        }
+
         .palanquilla{
             font-family: Arial, sans-serif;
             margin: 0.5rem;
@@ -104,8 +108,7 @@ html{font: 5px}
             font-size: 1.2rem !important;
             text-align: left;
         }
-
-        
+      
 
         .tabla-cilindro {
             width: 100%;
@@ -158,6 +161,7 @@ html{font: 5px}
         body {
         margin: 10px; /* Reduce los márgenes generales en pantallas pequeñas */
         }
+        }
         
 
         /*_C_ Aplica la bruja a los sliders, inputs y botones de control */
@@ -166,5 +170,5 @@ html{font: 5px}
         .input-rtrans-num,
         .input-luz-num,
         .btn-reset-param,
-        .btn-reset-todo {cursor: url("img/bruja.png") 16 16, pointer !important;}
+        .btn-reset-todo {cursor: url("./img/bruja.png") 16 16, pointer !important;}
 
