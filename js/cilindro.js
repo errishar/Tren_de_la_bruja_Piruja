@@ -30,7 +30,7 @@ export function cilindro_AH(n, B, H, R, r, a_deg) {
     if (x_cR < 0) x_cR = 0;
 
     let x1_fin = x_cR;
-    let n_puntos = Math.floor(n* factor);
+    let n_puntos = Math.floor(half_B*n* factor);
 
     // --- TRAMO 1: Parte plana superior (Y = H) ---
     let X1 = linespace(0, x1_fin, n_puntos);
@@ -68,7 +68,7 @@ export function cilindro_AH(n, B, H, R, r, a_deg) {
 
 
 export function cilindro_ovalo(n, B, H, R, r_fijo) {
-    n = Math.max(n, 25);
+    n = Math.max(B/2*n, 25);
     let x_final = B / 2.0;
 
     // 1. Control de seguridad geométrica
@@ -148,7 +148,7 @@ export function cilindro_ovalo(n, B, H, R, r_fijo) {
 
 export function cilindro_redondo(n = 100, B = 120.09, H = 49, R = 55, r = 8, a = 30) {
     let alfa = (a * Math.PI) / 180; // Ángulo de inclinación en radianes (30°)
-    n = Math.max(n, Math.trunc(B / 2));
+    n = Math.max(B/2*n, Math.trunc(B / 2));
 
     /* 1. TÉRMINO GEOMÉTRICO DE TRANSLACIÓN */
     let term_recta = ((H - R) + R * Math.sin(alfa) - r * (1 - Math.sin(alfa))) / Math.tan((Math.PI / 2) - alfa);
@@ -228,7 +228,7 @@ export function cilindro_C1(n = 100, B = 140, H = 35, R1 = 160, R2 = 40, r = 8) 
     const x_m1 = Math.max(0, Math.min(x_t12, x_max));
     const x_m2 = Math.max(x_m1, Math.min(x_t23, x_max));
 
-    const n_puntos = Math.floor(n / 3);
+    const n_puntos = Math.floor(B/2*n/3);
 
     // Tramo 1: Cresta superior (R1 = 160)
     const X1 = linespace(0, x_m1, n_puntos);
@@ -276,7 +276,7 @@ export function cilindro_C1(n = 100, B = 140, H = 35, R1 = 160, R2 = 40, r = 8) 
 
 export function cilindro_RSM(n , B , H, R, a, z){
     let a_rad = (a/2 * Math.PI) / 180; // Ángulo de inclinación en radianes (30°)
-    n = Math.max(n, Math.trunc(B / 2));
+    n = Math.max(B/2*n, Math.trunc(B / 2));
     /*Centro primera circunferencia */
     let x_c1 = 0;
     let y_c1 = H-R;
@@ -334,8 +334,8 @@ export function cilindro_RSM(n , B , H, R, a, z){
 } 
 
 export function relleno_palanquilla(p,n){
-    let X = linespace(0, p/2, n);
-    let Y = linespace(p/2, p/2, n);
+    let X = linespace(0, p/2, p/2*n);
+    let Y = linespace(p/2, p/2, p/2*n);
 
     let Xi = [].concat(X, p/2, 0);
     let Yi = [].concat(Y, 0, 0);

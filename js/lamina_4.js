@@ -16,7 +16,8 @@ import {
     generarPerfilSalidaKoncevicz 
 } from './calculo_laminación.js';
 
-const n_puntos = 40;
+const n_puntos = 10; //_j_ puntos por mm
+
 
 let diametrosJsonData = [];
 let configuracionJsonData = [];
