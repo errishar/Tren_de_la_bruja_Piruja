@@ -37,7 +37,6 @@ def simetria(cuadrante):
     return Salida
 
 
-
 def calcularCentroC2(x1, y1, x3, y3, R1, R2, r):
     d1 = R1 - R2  # Distancia C1–C2 (tangencia interior)
     d3 = R2 + r   # Distancia C3–C2 (tangencia exterior)
@@ -78,9 +77,6 @@ def calcularCentroC2(x1, y1, x3, y3, R1, R2, r):
         { "x": x2_1, "y": y2_1 },
         { "x": x2_2, "y": y2_2 }
     ]
-
-
-
 
 
 def interseccion_dos_circunferencias(x1, y1, R1, x2, y2, R2):
@@ -134,3 +130,108 @@ def interseccion_dos_circunferencias(x1, y1, R1, x2, y2, R2):
         return None
 
 
+def interpolarY2(perfil, xVal):
+    """
+    Esta función realiza una interpolación lineal para encontrar el radio de 
+    laminación local ($R$) que le corresponde a una coordenada $x$ específica 
+    (xVal) dentro del perfil del cilindro.
+    """
+    X = perfil.X
+    Y = perfil.Y
+
+    # Corregido: En Python se usa len(X) en lugar de X.length
+    if xVal <= X[0]: 
+        return Y[0]
+    if xVal >= X[len(X) - 1]: 
+        return Y[len(Y) - 1]
+
+    # _P_ Búsqueda del intervalo
+    # Corregido: Añadidos los dos puntos ':' al final del for y del if
+    for i in range(len(X) - 1):
+        if xVal >= X[i] and xVal <= X[i + 1]:
+            t = (xVal - X[i]) / (X[i + 1] - X[i])
+            return Y[i] + t * (Y[i + 1] - Y[i])
+        
+    return Y[len(Y) - 1]
+
+
+def interpolarY(perfil, xVal):
+    X = perfil.X
+    Y = perfil.Y
+
+    # Control de array vacío
+    if len(X) == 0: 
+        return 0
+        
+    if xVal <= X[0]: 
+        return Y[0]
+        
+    if xVal >= X[len(X) - 1]: 
+        return Y[len(Y) - 1]
+
+    for i in range(len(X) - 1):
+        dx = X[i + 1] - X[i]
+        
+        # ← ÚNICO CAMBIO (Usa el abs nativo de Python)
+        if abs(dx) < 1e-9: 
+            continue   
+            
+        if xVal >= X[i] and xVal <= X[i + 1]:
+            t = (xVal - X[i]) / dx
+            return Y[i] + t * (Y[i + 1] - Y[i])
+            
+    return Y[len(Y) - 1]
+
+
+def calcularAreaDesdePuntos(X, Y):
+    """
+    /**
+    * Calcula el área transversal completa a partir de los puntos del 1er cuadrante
+    * @param {Array<number>} X - Coordenadas X del perfil en el primer cuadrante
+    * @param {Array<number>} Y - Coordenadas Y del perfil en el primer cuadrante
+    * @returns {number} Área total considerando la simetría de los 4 cuadrantes
+    */
+    """
+    #_P_ np.trapz calcula automáticamente la regla del trapecio
+    A_cuadrante = np.trapz(Y, X)
+    return abs(A_cuadrante) * 4#_P_ Multiplicado por 4 para los cuatro cuadrantes
+    
+
+def crearFuncionAltura(X_in, Y_in):
+    """
+    Genera una función de consulta de altura estandarizada a partir de un perfil (X, Y) del 1er cuadrante
+    """
+    #_P_Control de lista vacía para evitar errores con max()
+    if len(X_in) == 0:
+        half_W0 = 0
+    else:
+        #_P_ Corregido: Math.max(...X_in) se traduce como max(X_in) en Python
+        half_W0 = max(X_in)
+    
+    #_P_ Definimos la función interna que se retornará
+    def funcion_altura(x):
+        x_abs = abs(x)
+        if x_abs > half_W0 or len(X_in) == 0: 
+            return 0
+        
+        #_P_ Interpolación lineal
+        if x_abs <= X_in[0]: 
+            return 2 * Y_in[0]
+        if x_abs >= X_in[len(X_in) - 1]: 
+            return 2 * Y_in[len(Y_in) - 1]
+
+        for i in range(len(X_in) - 1):
+            if x_abs >= X_in[i] and x_abs <= X_in[i + 1]:
+                #_P_ Evitamos división por cero si hay puntos duplicados
+                dx = X_in[i + 1] - X_in[i]
+                if abs(dx) < 1e-9:
+                    continue
+                
+                t = (x_abs - X_in[i]) / dx
+                y_interp = Y_in[i] + t * (Y_in[i + 1] - Y_in[i])
+                return 2 * y_interp  # Altura total simétrica
+            
+        return 0
+
+    #_P_ Retornamos la función para poder usarla más tarde
+    return funcion_altura
