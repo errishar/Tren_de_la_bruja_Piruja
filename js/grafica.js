@@ -7,6 +7,15 @@ export function graficarCilindroGenerico(canvasId, cilindroGenerico, cilindroRel
     const canvasEl = document.getElementById(canvasId);
     if (!canvasEl) return;
 
+    // 1. Obtener el contexto del Canvas
+    const ctx = canvasEl.getContext("2d");
+
+    // 1.2. DESTRUIR EL GRÁFICO ANTERIOR SI YA EXISTE (Esto libera la memoria y acelera el renderizado)
+    const chartExistente = Chart.getChart(canvasEl);
+    if (chartExistente) {
+        chartExistente.destroy();
+    }
+
     // 2. Mapeo de datos para el Perfil Superior e Inferior
     const datosSup = cilindroGenerico.X_sup.map((xVal, i) => ({ x: xVal, y: cilindroGenerico.Y_sup[i] }));
     const datosInf = cilindroGenerico.X_inf.map((xVal, i) => ({ x: xVal, y: cilindroGenerico.Y_inf[i] }));
@@ -79,7 +88,7 @@ export function graficarCilindroGenerico(canvasId, cilindroGenerico, cilindroRel
     }
 
     //_J_ 6. Instanciar Chart.js con la acción al hacer clic
-    const ctx = canvasEl.getContext("2d");
+    //_ja_const ctx = canvasEl.getContext("2d");
     chartsInstances[canvasId] = new Chart(ctx, {
         type: "line",
         data: { datasets: datasets },

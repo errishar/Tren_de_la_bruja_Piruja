@@ -109,9 +109,17 @@ function procesarCajasParaPerfil(perfilSeleccionado, salidaSeleccionada) {
 // GESTIÓN DE LOS COMBOBOXES (DINÁMICO)
 // ==========================================
 function manejarCambioPerfil(e) {
+    
     const perfilSeleccionado = e.target.value; //_j_ devuelve el perfil que se ha seleccionado, en número
     const zonaDinamica = document.getElementById('zonaSelectsDinamicos'); //_j_ busca y selecciona el contenedor vacío preparado en index.html
     
+    ///_j_ MACHETAZO 1: Destrucción inmediata del contenedor y vaciado de memoria global
+    window.pasadas_55 = [];
+    const contenedor = document.getElementById("contenedor-tablas");
+    if (contenedor) {
+        contenedor.innerHTML = ""; // Borra todo el DOM de las tarjetas y canvas de golpe
+    }
+
     //_j_ Protección crucial: Si no existe el contenedor en el DOM, detenemos la ejecución para evitar el error
     if (!zonaDinamica) return;
 
@@ -175,6 +183,13 @@ function manejarCambioSalida(e) {
     const perfilSeleccionado = document.getElementById('selectPerfil').value; //_J_ perfil seleccionado
     const salidaSeleccionada = e.target.value; //_J_ saca el valor de la salida seleccionada
 
+    //_j_ MACHETAZO 1: Destrucción inmediata del contenedor y vaciado de memoria global
+    window.pasadas_55 = [];
+    const contenedor = document.getElementById("contenedor-tablas");
+    if (contenedor) {
+        contenedor.innerHTML = ""; // Borra todo el DOM de las tarjetas y canvas de golpe
+    }
+
     if (!salidaSeleccionada) return;
 
     window.pasadas_55 = procesarCajasParaPerfil(perfilSeleccionado, salidaSeleccionada);
@@ -231,7 +246,7 @@ function actualizarPasadas() {
         let perfilSimetrico = simetria(perfilConLuz);
         let areaSalidaTotal ;
         let rTransVal ;
-    
+        console.log("Hacemos los perfiles de la caja: ", p.nombre);
         if (p.tipo === "AH") {
             let mu = 0.35;
             
@@ -266,7 +281,7 @@ function actualizarPasadas() {
             if (p.nombre !=="BH" && p.nombre !=="CV" ){
                 rellenocuadrante = rotarSalidaAEntrada(rellenocuadrante);
             }
-
+            console.log("Haciendo el modelo Perfil de salida Shinokura versión 3 para la caja :", p.nombre);
             rellenocuadrante = generarPerfilsalidahinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
             /* 
                 _M_ rellenocuadrante = generarPerfil salidahinokura(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
