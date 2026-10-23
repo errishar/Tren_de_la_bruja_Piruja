@@ -48,7 +48,18 @@
       "backgroundColor": "transparent",
       "bold": false,
       "italic": false
+    },
+
+    {
+      "tag": "_U_", // Para modelos
+      "color": "red",
+      "strikethrough": false,//Significa que el texto no aparecerá tachado 
+      "underline": true, //"underline": true: Significa que el texto estará subrayado 
+      "backgroundColor": "yellow",
+      "bold": true,
+      "italic": false
     }
+
 <<<<<<< HEAD
   ]
 =======

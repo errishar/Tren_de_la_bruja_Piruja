@@ -44,7 +44,7 @@ function procesarCajasParaPerfil(perfilSeleccionado, salidaSeleccionada) {
         let nombreCaja = "";
         let perfilBusqueda = perfilSeleccionado;
 
-        // Comprobar si el ítem es un texto plano ("C26") o un objeto complejo ({ caja: "C26", perfil_cilindro: 12 })
+        //_U_ Comprobar si el ítem es un texto plano ("C26") o un objeto complejo ({ caja: "C26", perfil_cilindro: 12 }) FALLA
         if (typeof itemCaja === 'string') {
             nombreCaja = itemCaja;
         } else if (typeof itemCaja === 'object' && itemCaja !== null) {
@@ -131,7 +131,7 @@ function manejarCambioPerfil(e) {
 
         //_J_ Contamos cuántas opciones hay en salidas usando .length
         if (opcionesSalida.length === 1) {
-            // CASO A: Si solo hay 1 opción (ej. solo "29"), NO hace desplegable y carga directo
+            // _J_CASO A: Si solo hay 1 opción (ej. solo "29"), NO hace desplegable y carga directo
             zonaDinamica.innerHTML = ''; 
             const unicaOpcion = opcionesSalida[0];
             
