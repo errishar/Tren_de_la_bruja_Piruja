@@ -507,7 +507,7 @@ export function generarPerfilSalidaEkelundZheng2(perfilCilindro, P_in, g, R_nom,
  * @param {number} alpha - Coeficiente de Shinokura (por defecto 0.85)
  * @param {number} n_puntos_libre - Puntos para discretizar la zona libre de abombamiento
  */
-export function generarPerfilSalidaShinokura3(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
+export function generarPerfilsalidahinokura3(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
     const half_g = g / 2;
     const X_c = perfilCilindro.X;
     const Y_c = perfilCilindro.Y;
@@ -619,7 +619,7 @@ export function generarPerfilSalidaShinokura3(perfilCilindro, P_in, g, R_nom, al
  * @param {number} alpha - Coeficiente de Shinokura (por defecto 0.85)
  * @param {number} n_puntos_libre - Puntos para discretizar la zona libre de abombamiento
  */
-export function generarPerfilSalidaShinokura2(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
+export function generarPerfilsalidahinokura2(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
     const half_g = g / 2;
     const X_c = perfilCilindro.X;
     const Y_c = perfilCilindro.Y;
@@ -738,7 +738,7 @@ export function generarPerfilSalidaShinokura2(perfilCilindro, P_in, g, R_nom, al
  * @param {number} alpha - Coeficiente de Shinokura (por defecto 0.85)
  * @param {number} n_puntos_libre - Puntos para discretizar la zona libre de abombamiento
  */
-export function generarPerfilSalidaShinokura(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
+export function generarPerfilsalidahinokura(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
 
     const half_g = g / 2;
     const X_c = perfilCilindro.X;

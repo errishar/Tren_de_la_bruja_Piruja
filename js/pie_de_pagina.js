@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (contenedorFooter) {
         contenedorFooter.innerHTML = `
-            <p class="txtRegistro">ver:1.3 © Chilindri.GmBH</p>
+            <p class="txtRegistro">ver:2 © Chilindri.GmBH</p>
         `;
     }
 });

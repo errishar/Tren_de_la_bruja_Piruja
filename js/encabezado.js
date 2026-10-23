@@ -11,8 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
         </td>
         <td>
             <h3 class="mensaje_desarrollador">Mensaje del desarrollador:</strong></h>
-            <p class="txtMensaje">- Sale mal el modelo óvalo-redondo (estoy en ello, no sé como, pero estar, estoy)</p>
-            <p class="txtMensaje">- Si no lo ves o hace piruladas, mándame un WhatsApp, que a lo mejor estoy haciendo piruladas.</p>
+            <p class="txtMensaje">- La laminación que es lo importante sigue mal, sigo en ello</p>
+            <p class="txtMensaje">- Selecciona por Perfil y palanquilla de entrada.</p>
+            <p class="txtMensaje">- Luces están mal, tengo que ir modificando.</p>
             <p class="txtMensaje">- Se admiten sugerencias. SIEMPRE</p>
         </td>
 </table>

@@ -5,7 +5,7 @@ import { cilindro_AH, cilindro_ovalo, cilindro_redondo, cilindro_C1, cilindro_RS
 import { simetria, calcularAreaDesdePuntos, aplicarLuz } from './calculos.js';
 import { graficarCilindroGenerico } from './grafica.js';
 import { pasadas_55, generarPasadas55 } from './pasadas.js';
-import { generarPerfilSalidaEkelund, generarPerfilSalidaEkelundZheng, generarPerfilSalidaShinokura, generarPerfilSalidaShinokura2, generarPerfilSalidaZheng, rotarSalidaAEntrada, generarPerfilSalidaTafelSedlaczek, generarPerfilSalidaKoncevicz } from './calculo_laminación.js';
+import { generarPerfilSalidaEkelund, generarPerfilSalidaEkelundZheng, generarPerfil salidahinokura, generarPerfil salidahinokura2, generarPerfilSalidaZheng, rotarSalidaAEntrada, generarPerfilSalidaTafelSedlaczek, generarPerfilSalidaKoncevicz } from './calculo_laminación.js';
 
 const n_puntos = 40;
 

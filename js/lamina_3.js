@@ -5,7 +5,7 @@ import { cilindro_AH, cilindro_ovalo, cilindro_redondo, cilindro_C1, cilindro_RS
 import { simetria, calcularAreaDesdePuntos, aplicarLuz } from './calculos.js';
 import { graficarCilindroGenerico } from './grafica.js';
 import { pasadas_55, generarPasadas55 } from './pasadas.js';
-import { generarPerfilSalidaEkelund, generarPerfilSalidaEkelundZheng2, generarPerfilSalidaEkelundZheng, generarPerfilSalidaShinokura ,generarPerfilSalidaShinokura2, generarPerfilSalidaShinokura3, generarPerfilSalidaZheng, rotarSalidaAEntrada, generarPerfilSalidaTafelSedlaczek, generarPerfilSalidaKoncevicz } from './calculo_laminación.js';
+import { generarPerfilSalidaEkelund, generarPerfilSalidaEkelundZheng2, generarPerfilSalidaEkelundZheng, generarPerfilsalidahinokura ,generarPerfilsalidahinokura2, generarPerfilsalidahinokura3, generarPerfilSalidaZheng, rotarSalidaAEntrada, generarPerfilSalidaTafelSedlaczek, generarPerfilSalidaKoncevicz } from './calculo_laminación.js';
 
 const n_puntos = 40;
 
@@ -70,9 +70,9 @@ function actualizarPasadas() {
             /*
                 _M_ rellenocuadrante = generarPerfilSalidaEkelundZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
                 _M_ rellenocuadrante = generarPerfilSalidaEkelundZheng2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, mu, n_puntos);
-                _M_ rellenocuadrante = generarPerfilSalidaShinokura(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
-                _M_ rellenocuadrante = generarPerfilSalidaShinokura2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
-                _M_ rellenocuadrante = generarPerfilSalidaShinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+                _M_ rellenocuadrante = generarPerfil salidahinokura(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+                _M_ rellenocuadrante = generarPerfil salidahinokura2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+                _M_ rellenocuadrante = generarPerfil salidahinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
                 _M_ rellenocuadrante =generarPerfilSalidaTafelSedlaczek(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
                 _M_ rellenocuadrante = generarPerfilSalidaKoncevicz(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
                 _M_ rellenocuadrante = generarPerfilSalidaZheng(perfilCilindro, P_in, g, R_Tabla, m_material = 1.25, gamma = 0.97, maxIter = 3);
@@ -92,11 +92,11 @@ function actualizarPasadas() {
         rellenocuadrante = rotarSalidaAEntrada(rellenocuadrante);
         }
 
-        rellenocuadrante = generarPerfilSalidaShinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+        rellenocuadrante = generarPerfilsalidahinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
         /* 
-            _M_ rellenocuadrante = generarPerfilSalidaShinokura(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
-            _M_ rellenocuadrante = generarPerfilSalidaShinokura2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
-            _M_ rellenocuadrante = generarPerfilSalidaShinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+            _M_ rellenocuadrante = generarPerfil salidahinokura(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+            _M_ rellenocuadrante = generarPerfil salidahinokura2(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
+            _M_ rellenocuadrante = generarPerfil salidahinokura3(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, alpha, n_puntos);
             _M_ rellenocuadrante =generarPerfilSalidaTafelSedlaczek(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
             _M_ rellenocuadrante = generarPerfilSalidaKoncevicz(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, n_puntos);
             _M_ rellenocuadrante = generarPerfilSalidaZheng(perfilCuadrante, rellenocuadrante, luzVal, R_Tabla, 1.25, (p.tipo === "redondo") ? 0.83 : 0.97, 3);
@@ -309,5 +309,14 @@ document.addEventListener("DOMContentLoaded", () => {
             generarPasadas55();
             actualizarPasadas();
         });
-    });
+    })
+
+//_j_Ahora meteo para consultar el resto, de BDM en adelante
+
+
+
+
+
+
+
 });

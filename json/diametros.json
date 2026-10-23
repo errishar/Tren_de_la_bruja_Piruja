@@ -1,11 +1,8 @@
-{  "n_puntos": 40 ,
+ [
 
-"cil_BDM": [
     { "id": "AH", "nombre": "Caja AH", "tipo": "AH",      "B": 180.0,   "H": 46, "R": 120, "r": 8,   "a": 12 },
     { "id": "BH", "nombre": "Caja BH", "tipo": "ovalo",   "B": 209.37, "H": 39, "R": 160, "r": 10, "a": 0  },
-    { "id": "CV", "nombre": "Caja CV", "tipo": "redondo", "B": 120.09, "H": 49, "R": 55,   "r": 8,   "a": 30 }
-  ],
-"cil_cont" : [
+    { "id": "CV", "nombre": "Caja CV", "tipo": "redondo", "B": 120.09, "H": 49, "R": 55,   "r": 8,   "a": 30 },
     { "id": "C1",   "nombre": "Caja 1",    "tipo": "C1",       "B": 140,     "H": 35,   "R1": 160,   "R2": 40, "r": 8,   "a": 0 },
     { "id": "C2",   "nombre": "Caja C2",   "tipo": "ovalo",    "B": 146.64,   "H": 28,   "R": 110,   "r": 8,   "a": 0    },
     { "id": "C3",   "nombre": "Caja C3",   "tipo": "redondo",   "B": 90.3,    "H": 36,   "R": 42.2,   "r": 6,   "a": 30   },
@@ -16,15 +13,11 @@
     { "id": "C8",   "nombre": "Caja C8",   "tipo": "ovalo",    "B": 65.36,   "H": 12,   "R": 50.5,   "r": 4,   "a": 0    },
     { "id": "C9",   "nombre": "Caja C9",   "tipo": "redondo",   "B": 42.15,   "H": 16.5, "R": 20,    "r": 4,   "a": 30   },
     { "id": "C10", "nombre": "Caja C10", "tipo": "ovalo",     "B": 52.65,   "H": 9,    "R": 43,    "r": 4,   "a": 0    },
-    { "id": "C11", "nombre": "Caja C11", "tipo": "redondo",   "B": 33.20,   "H": 13,   "R": 15.75, "r": 3,   "a": 30   }
-],
-  "cil_rey": [
+    { "id": "C11", "nombre": "Caja C11", "tipo": "redondo",   "B": 33.20,   "H": 13,   "R": 15.75, "r": 3,   "a": 30   },
     { "id": "C12", "nombre": "Caja C12", "tipo": "ovalo",   "B": 39.33, "H": 8.5,   "R": 27,   "r": 1.5, "a": 0 },
     { "id": "C13", "nombre": "Caja C13", "tipo": "redondo", "B": 26.79, "H": 10.7, "R": 12.5, "r": 1.5, "a": 30 },
     { "id": "C14", "nombre": "Caja C14", "tipo": "ovalo",   "B": 35.46, "H": 5.8,   "R": 30,   "r": 1.5, "a": 0 },
-    { "id": "C15", "nombre": "Caja C15", "tipo": "redondo", "B": 20.78, "H": 8.2,   "R": 9.8,   "r": 1.5, "a": 30 }
-  ],
-  "cil_NTM1": [
+    { "id": "C15", "nombre": "Caja C15", "tipo": "redondo", "B": 20.78, "H": 8.2,   "R": 9.8,   "r": 1.5, "a": 30 },
     { "id": "C16", "variante": 1, "nombre": "Caja C16", "tipo": "ovalo",   "B": 25.48, "H": 5.5,   "R": 17.5, "r": 1.5, "a": 0  },
     { "id": "C16", "variante": 2, "nombre": "Caja C16", "tipo": "ovalo",   "B": 27.95, "H": 5.5,   "R": 20.5, "r": 1.5, "a": 0  },
     { "id": "C17", "variante": 1, "nombre": "Caja C17", "tipo": "redondo", "B": 16.74, "H": 7,    "R": 7.5,   "r": 1.5, "a": 30 },
@@ -44,11 +37,8 @@
     { "id": "C23", "variante": 2, "nombre": "Caja C23", "tipo": "redondo", "B": 8.78,   "H": 3.5,   "R": 4.33, "r": 0,   "a": 25 },
     { "id": "C24", "variante": 1, "nombre": "Caja C24", "tipo": "ovalo",   "B": 13.56, "H": 2.1,   "R": 12,   "r": 1.5, "a": 0  },
     { "id": "C25", "variante": 1, "nombre": "Caja C25", "tipo": "redondo", "B": 7.69,   "H": 3.1,   "R": 3.68, "r": 0,   "a": 25 },
-    { "id": "C25", "variante": 2, "nombre": "Caja C25", "tipo": "redondo", "B": 7.11,   "H": 3.1,   "R": 3.57, "r": 0,   "a": 25 }
-  ],
-  "cil_RSM": [
-    {
-      "id": "26",
+    { "id": "C25", "variante": 2, "nombre": "Caja C25", "tipo": "redondo", "B": 7.11,   "H": 3.1,   "R": 3.57, "r": 0,   "a": 25 },
+    { "id": "26",
       "nombre": "Caja C26",
       "tipo": "ovalo",
       "perfiles": [
@@ -94,10 +84,8 @@
         { "perfil": "25",   "variante": 1, "B": 36.69, "H": 11.35, "R": 20.50, "r": 1.5 },
         { "perfil": "25.5", "variante": 1, "B": 37.65, "H": 12.38, "R": 20.50, "r": 1.5 },
         { "perfil": "26.5", "variante": 1, "B": 37.65, "H": 12.38, "R": 20.50, "r": 1.5 }
-      ]
-    },
-    {
-      "id": "C27",
+        ]},
+        {"id": "C27",
       "nombre": "Caja C27",
       "tipo": "RSM",
       "perfiles": [
@@ -143,13 +131,11 @@
         { "perfil": 25,   "variante": 1, "B": 27.51, "H": 12.36, "R": 13.06, "a": 121, "n": 2 },
         { "perfil": 25.5, "variante": 1, "B": 29.35, "H": 13.24, "R": 13.94, "a": 122, "n": 2 },
         { "perfil": 26.5, "variante": 1, "B": 29.35, "H": 13.24, "R": 13.94, "a": 122, "n": 2 }
-      ]
-    },
-    {
-      "id": "C28",
-      "nombre": "Caja C28",
-      "tipo": "RSM",
-      "perfiles": [
+        ]},
+        {"id": "C28",
+        "nombre": "Caja C28",
+        "tipo": "RSM",
+        "perfiles": [
         { "perfil": 5,    "variante": 1, "B": 5.72,   "H": 2.00,   "R": 2.66,   "a": 92,   "n": 3 },
         { "perfil": 5,    "variante": 2, "B": 6.03,   "H": 1.95,   "R": 2.74,   "a": 80,   "n": 3 },
         { "perfil": 5.5,   "variante": 1, "B": 6.40,   "H": 2.38,   "R": 2.79,   "a": 90,   "n": 3 },
@@ -197,13 +183,11 @@
         { "perfil": 25.5, "variante": 1, "B": 29.82, "H": 12.12, "R": 13.94, "a": 112, "n": 3 },
         { "perfil": 26,   "variante": 1, "B": 29.66, "H": 12.41, "R": 13.94, "a": 117, "n": 3 },
         { "perfil": 26.5, "variante": 1, "B": 29.49, "H": 12.70, "R": 13.94, "a": 122, "n": 3 }
-      ]
-    },
-    {
-      "id": "C29",
-      "nombre": "Caja C29",
-      "tipo": "RSM",
-      "perfiles": [
+        ]},
+        {"id": "C29",
+        "nombre": "Caja C29",
+        "tipo": "RSM",
+        "perfiles": [
         { "perfil": 5,    "variante": 1, "B": 5.26,   "H": 2.04,   "R": 2.54,   "a": 105, "n": 2 },
         { "perfil": 5,    "variante": 2, "B": 5.26,   "H": 2.04,   "R": 2.54,   "a": 105, "n": 2 },
         { "perfil": 5.5,   "variante": 1, "B": 5.87,   "H": 2.29,   "R": 2.79,   "a": 102, "n": 2 },
@@ -254,4 +238,3 @@
       ]
     }
   ]
-}
