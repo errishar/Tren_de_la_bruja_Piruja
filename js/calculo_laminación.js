@@ -1,6 +1,6 @@
 /*calculo_laminación.js*/
 import { cilindro_AH, cilindro_ovalo, cilindro_redondo, cilindro_C1, cilindro_RSM } from './cilindro.js';
-import { aplicarLuz, simetria, truncarRelleno, calcular_X, interpolarY, calcularAreaDesdePuntos, crearFuncionAltura, trunc } from './calculos.js';
+import { aplicarLuz, simetria, truncarRelleno, calcular_X, interpolarY, calcularAreaDesdePuntos, crearFuncionAltura, trunc, linespace } from './calculos.js';
 
 
 
@@ -507,101 +507,38 @@ export function generarPerfilSalidaEkelundZheng2(perfilCilindro, P_in, g, R_nom,
  * @param {number} alpha - Coeficiente de Shinokura (por defecto 0.85)
  * @param {number} n_puntos_libre - Puntos para discretizar la zona libre de abombamiento
  */
-export function generarPerfilsalidahinokura3(perfilCilindro, P_in, g, R_nom, alpha = 0.85, n_puntos_libre = 25) {
-    const half_g = g / 2;
-    const X_c = perfilCilindro.X;
-    const Y_c = perfilCilindro.Y;
-    const Y_luz = Y_c.map(y => y + half_g);
+export function generarPerfilsalidahinokura3(perfilCanal, perfilEntrada, valorLuz, R_tabla, alpha = 0.85, n_puntos = 10) {
+    // 1. Obtener altura máxima y anchura del perfil de entrada
+    const H0 = Math.max(...perfilEntrada.Y);
+    const W0 = Math.max(...perfilEntrada.X) * 2;
+    const A0 = calcularAreaDesdePuntos(perfilEntrada.X, perfilEntrada.Y);
 
-    const X_in = P_in.X;
-    const Y_in = P_in.Y;
+    // 2. Incorporar la luz (valorLuz) de manera efectiva en la altura de referencia inicial (delta H eq)
+    // El canal se evalúa considerando el efecto del gap en las condiciones de entrada
+    const H_canal_max = Math.max(...perfilCanal.Y);
+    const dH_eq = Math.max(0.1, H0 - H_canal_max - (valorLuz / 2)); 
 
-    // 1. Cálculo automático de W0 y A0 desde el primer cuadrante
-    const half_W0 = Math.max(...X_in);
-    const W0 = 2 * half_W0;
-    const A0 = calcularAreaDesdePuntos(X_in, Y_in);
-
-    // 2. Cálculo de dimensiones equivalentes (Alturas medias)
-    const H0_media = A0 / W0; // Altura media geométrica del material de entrada
-    const H_rodillo_max = 2 * Math.max(...Y_c); // Altura máxima del hueco del rodillo (fondo del canal)
+    // 3. Cálculo del ensanchamiento sensible a la luz y al radio de tabla (R_tabla)
+    const factorAncho = Math.sqrt(R_tabla * dH_eq);
+    const delta_W = alpha * factorAncho * (1.0 - (H0 / (H0 + dH_eq + valorLuz)));
     
-    // Reducción de altura equivalente
-    const dH_eq = Math.max(0, H0_media - H_rodillo_max);
-    
-    // Área reducida (Área del material que se deforma contra el rodillo)
-    const Ah = Math.max(0, A0 - (W0 * H_rodillo_max));
+    let half_W1 = (W0 / 2) + delta_W;
+    const half_W_canal_max = Math.max(...perfilCanal.X);
 
-    // 3. Aplicación del Modelo de Shinokura y Takai
-    const y_c_media = Math.max(...Y_c) / 2;
-    const R_eff = R_nom - y_c_media; // Radio efectivo
-
-    // --- CÁLCULO DEL ÁNGULO DE MORDEDURA ---
-    let cos_angulo = 1 - (dH_eq / (2 * R_eff));
-    // Protección para evitar errores matemáticos
-    cos_angulo = Math.max(-1, Math.min(1, cos_angulo)); 
-    let angulo_mordedura_deg = Math.acos(cos_angulo) * (180 / Math.PI);
-    
-    // Log para verificar en consola
-    //_Ja_console.log(`Ángulo de mordedura (Shinokura): ${angulo_mordedura_deg.toFixed(2)}° | Reducción: ${dH_eq.toFixed(2)} mm`);
-    // ----------------------------------------------
-
-    // Cálculo del ensanchamiento según Shinokura
-    const factorGeometria = Math.sqrt(R_eff * dH_eq) / (W0 + 0.5 * H0_media);
-    const W1 = W0 * (1 + alpha * (Ah / A0) * factorGeometria);
-    const half_W1 = W1 / 2;
-    
-    // Restricción física del ancho del rodillo
-    const half_W_canal_max = Math.max(...X_c);              
-    const half_W1_efectivo = Math.min(half_W1, half_W_canal_max);  
-
-    // 4. Construcción de la matriz de puntos de salida (X_out, Y_out)
-    let X_out = [];
-    let Y_out = [];
-
-    // Buscar hasta dónde llega la zona de contacto real (donde la parábola tocaría el rodillo)
-    let idx_contacto = 0;
-    for (let i = 0; i < X_c.length; i++) {
-        if (X_c[i] <= half_W1_efectivo) {
-            idx_contacto = i;
-        } else {
-            break;
-        }
+    // Control de llenado (evita recortes silenciosos extremos, emitiendo aviso o ajustando)
+    if (half_W1 > half_W_canal_max) {
+        console.warn(`[Aviso de Sobrellenado] El semiancho predicho (${half_W1.toFixed(2)}) supera el canal (${half_W_canal_max.toFixed(2)}).`);
     }
+    
+    let half_W_final = Math.min(half_W1, half_W_canal_max);
 
-    // --- Zona de Contacto con el Calibre ---
-    for (let i = 0; i <= idx_contacto; i++) {
-        X_out.push(X_c[i]);
-        Y_out.push(Y_luz[i]);
-    }
-
-    const x_cont = X_out[X_out.length - 1];
-    const y_cont = Y_out[Y_out.length - 1];
-
-    // --- Zona Libre / Abombamiento Lateral (*Free Surface Bulging*) ---
-    if (half_W1_efectivo > x_cont) {
-        let dx_libre = (half_W1_efectivo - x_cont) / n_puntos_libre;
-
-        for (let i = 1; i <= n_puntos_libre; i++) {
-            let x = x_cont + i * dx_libre;
-            let t = (x - x_cont) / (half_W1_efectivo - x_cont);
-            
-            // Parábola natural de abombamiento
-            let y_parabola = y_cont - (y_cont - half_g) * Math.pow(t, 2);
-            
-            // Altura del rodillo en ese punto X (usando interpolación segura)
-            let y_canal_max = interpolarY({ X: X_c, Y: Y_luz }, x);
-
-            // Si el acero intenta salirse del rodillo, se ciñe a él (no lo atraviesa)
-            let y_final = Math.min(y_parabola, y_canal_max);
-            y_final = Math.max(half_g, y_final); // No bajar de la luz
-
-            X_out.push(x);
-            Y_out.push(y_final);
-        }
-    }
-
-    X_out = X_out.map(x => trunc(x, 2));
-    Y_out = Y_out.map(y => trunc(y, 2));        
+    // Generar la nueva sección de salida integrada con la luz real
+    let X_out = linespace(0, half_W_final, Math.max(20, Math.floor(half_W_final * n_puntos)));
+    let Y_out = X_out.map(x => {
+        // Interpolar contra el contorno del canal con el desplazamiento de la luz aplicado
+        let y_canal = interpolarY(perfilCanal, x);
+        return Math.max(0, y_canal + (valorLuz / 2));
+    });
 
     return {
         X: X_out,
@@ -978,35 +915,43 @@ export function generarPerfilSalidaZheng(perfilCilindro, P_in, g, R_nom, m_mater
 /**
  * Rota el perfil de salida de una caja 90° para que sirva correctamente como entrada (P_in) de la siguiente caja.
  */
-export function rotarSalidaAEntrada(salidaAnterior) {
-    const X_prev = salidaAnterior.X;
-    const Y_prev = salidaAnterior.Y;
+export function rotarSalidaAEntrada(perfilEntrada) {
+    if (!perfilEntrada || !perfilEntrada.X || perfilEntrada.X.length === 0) {
+        return { X: [], Y: [] };
+    }
 
-    // Tomamos la referencia mínima en Y (la luz o semiancho del canal previo)
-    const min_y = Math.min(...Y_prev);
+    // 1. Calcular área y dimensiones originales para asegurar conservación de masa/volumen
+    let areaOriginal = calcularAreaDesdePuntos(perfilEntrada.X, perfilEntrada.Y);
+    let max_X = Math.max(...perfilEntrada.X);
+    let max_Y = Math.max(...perfilEntrada.Y);
 
-    // Mapeo correcto de ejes al rotar 90°:
-    // - El nuevo ancho de entrada (x) viene de la altura anterior (Y_prev - min_y)
-    // - La nueva altura de entrada (y) viene del ancho anterior (X_prev)
-    let puntos = X_prev.map((x_val, i) => ({
-        x: Y_prev[i] - min_y, 
-        y: x_val              
-    }));
+    // 2. Intercambio de ejes (Rotación 90°): 
+    // La antigua altura máxima pasa a ser la semianchura base, y el ancho pasa a ser la altura.
+    let nuevo_half_W = max_Y; 
+    let n_puntos = perfilEntrada.X.length;
 
-    // Ordenar estrictamente de menor a mayor en X para la interpolación
-    puntos.sort((a, b) => a.x - b.x);
+    let X_rot = linespace(0, nuevo_half_W, n_puntos);
+    
+    // Mapeo inverso de coordenadas normalizado para conservar el área transversal exacta
+    let factorEscalaArea = nuevo_half_W > 0 ? (max_X / nuevo_half_W) : 1.0;
 
-    // Filtrar duplicados en X para evitar divisiones por cero
-    let puntosUnicos = [];
-    for (let p of puntos) {
-        if (puntosUnicos.length === 0 || p.x !== puntosUnicos[puntosUnicos.length - 1].x) {
-            puntosUnicos.push(p);
-        }
+    let Y_rot = X_rot.map(x => {
+        let xCorrespondiente = Math.min(max_X, x * factorEscalaArea);
+        // Buscar la altura equivalente interpolando el perfil original invertido
+        let yInterp = interpolarY(perfilEntrada, max_X - xCorrespondiente);
+        return Math.max(0, yInterp * (max_X / Math.max(1e-5, nuevo_half_W)));
+    });
+
+    // Ajuste fino para garantizar la coincidencia exacta del área original tras la rotación
+    let areaRotadaActual = calcularAreaDesdePuntos(X_rot, Y_rot);
+    if (areaRotadaActual > 0) {
+        let factorCorreccionArea = Math.sqrt(areaOriginal / areaRotadaActual);
+        Y_rot = Y_rot.map(y => y * factorCorreccionArea);
     }
 
     return {
-        X: puntosUnicos.map(p => p.x),
-        Y: puntosUnicos.map(p => p.y)
+        X: X_rot,
+        Y: Y_rot
     };
 }
     
