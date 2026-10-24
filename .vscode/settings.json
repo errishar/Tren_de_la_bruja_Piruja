@@ -1,20 +1,9 @@
 {
   "better-comments.tags": [
+    
+    
     {
-      "tag": "_H_", // Para HTML
-      "color": "#ff746c",
-      "strikethrough": false, // Controla el tachado. Si lo pones en true, cruzará una línea horizontal sobre todo el texto del comentario (como si estuviera borrado). Al estar en false, el texto se ve normal.
-      "underline": false, //• false: Controla el subrayado. Si cambias esta propiedad a true, colocará una línea por debajo de todo el texto del comentario.
-      "backgroundColor": "transparent", //• "transparent": Establece el color de fondo del comentario. Al estar en "transparent" (transparente), el fondo mantiene el color oscuro por defecto de tu editor de código. Si pusieras un color aquí, se crearía una franja resaltadora detrás de las letras.
-      "bold": false, //• false: Controla las negritas. Si lo pones en true, el texto del comentario se volverá más grueso y robusto para resaltar más.
-      "italic": false //• false: Controla las cursivas (letras inclinadas). Si lo cambias a true, el texto se inclinará hacia la derecha, dándole un estilo de anotación manuscrita.
-<<<<<<< HEAD
-
-=======
->>>>>>> rama-temporal
-    },
-    {
-      "tag": "_C_", // Para CSS
+      "tag": "_C_",
       "color": "#ADFF2F",
       "strikethrough": false,
       "underline": false,
@@ -23,8 +12,8 @@
       "italic": false
     },
     {
-      "tag": "_J_", // Para Javascript
-      "color": "orange",//oro
+      "tag": "_H_",
+      "color": "#ff746c",
       "strikethrough": false,
       "underline": false,
       "backgroundColor": "transparent",
@@ -32,7 +21,16 @@
       "italic": false
     },
     {
-      "tag": "_Ja_", // Para Javascript
+      "tag": "_J_",
+      "color": "orange",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "_Ja_",
       "color": "#096602",
       "strikethrough": false,
       "underline": false,
@@ -41,7 +39,7 @@
       "italic": false
     },
     {
-      "tag": "_M_", // Para modelos
+      "tag": "_M_",
       "color": "#FF69B4",
       "strikethrough": false,
       "underline": false,
@@ -49,21 +47,26 @@
       "bold": false,
       "italic": false
     },
-
     {
-      "tag": "_U_", // Para modelos
+      "tag": "_P_",
+      "color": "#00ffc8",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "_U_",
       "color": "red",
-      "strikethrough": false,//Significa que el texto no aparecerá tachado 
-      "underline": true, //"underline": true: Significa que el texto estará subrayado 
+      "strikethrough": false,
+      "underline": true,
       "backgroundColor": "yellow",
       "bold": true,
       "italic": false
     }
-
-<<<<<<< HEAD
-  ]
-=======
   ],
-  "git.autofetch": "all"
->>>>>>> rama-temporal
+  "git.autofetch": "all",
+  "python.defaultInterpreterPath": "C:\\Users\\Ricardo\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+  "python-envs.defaultEnvManager": "ms-python.python:system"
 }
