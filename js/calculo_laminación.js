@@ -508,13 +508,13 @@ export function generarPerfilSalidaEkelundZheng2(perfilCilindro, P_in, g, R_nom,
  * @param {number} n_puntos_libre - Puntos para discretizar la zona libre de abombamiento
  */
 export function generarPerfilsalidahinokura3(perfilCanal, perfilEntrada, valorLuz, R_tabla, alpha = 0.85, n_puntos = 10) {
+
     // 1. Obtener altura máxima y anchura del perfil de entrada
     const H0 = Math.max(...perfilEntrada.Y);
     const W0 = Math.max(...perfilEntrada.X) * 2;
     const A0 = calcularAreaDesdePuntos(perfilEntrada.X, perfilEntrada.Y);
 
     // 2. Incorporar la luz (valorLuz) de manera efectiva en la altura de referencia inicial (delta H eq)
-    // El canal se evalúa considerando el efecto del gap en las condiciones de entrada
     const H_canal_max = Math.max(...perfilCanal.Y);
     const dH_eq = Math.max(0.1, H0 - H_canal_max - (valorLuz / 2)); 
 
@@ -525,7 +525,7 @@ export function generarPerfilsalidahinokura3(perfilCanal, perfilEntrada, valorLu
     let half_W1 = (W0 / 2) + delta_W;
     const half_W_canal_max = Math.max(...perfilCanal.X);
 
-    // Control de llenado (evita recortes silenciosos extremos, emitiendo aviso o ajustando)
+    // Control de llenado físico
     if (half_W1 > half_W_canal_max) {
         console.warn(`[Aviso de Sobrellenado] El semiancho predicho (${half_W1.toFixed(2)}) supera el canal (${half_W_canal_max.toFixed(2)}).`);
     }
@@ -535,7 +535,6 @@ export function generarPerfilsalidahinokura3(perfilCanal, perfilEntrada, valorLu
     // Generar la nueva sección de salida integrada con la luz real
     let X_out = linespace(0, half_W_final, Math.max(20, Math.floor(half_W_final * n_puntos)));
     let Y_out = X_out.map(x => {
-        // Interpolar contra el contorno del canal con el desplazamiento de la luz aplicado
         let y_canal = interpolarY(perfilCanal, x);
         return Math.max(0, y_canal + (valorLuz / 2));
     });
@@ -545,6 +544,7 @@ export function generarPerfilsalidahinokura3(perfilCanal, perfilEntrada, valorLu
         Y: Y_out
     };
 }
+
 /**
  * Genera el perfil de salida usando el modelo de Shinokura y Takai.
  * Recibe únicamente las coordenadas (X, Y) del primer cuadrante de entrada.
@@ -738,7 +738,11 @@ export function generarPerfilsalidahinokura(perfilCilindro, P_in, g, R_nom, alph
 
     // Límite físico máximo del ancho del canal
     const half_W_canal_max = Math.max(...X_c);
-    const half_W1_efectivo = Math.min(half_W1, half_W_canal_max);
+    if (half_W1>=half_W_canal_max){
+        console.log("Desborda la canal")
+    }
+    let half_W_final=half_W1;
+
 
     // 4. Construcción de la matriz de puntos de salida (X_out, Y_out) en el 1er cuadrante
     let X_out = [];
@@ -864,7 +868,13 @@ export function generarPerfilSalidaZheng(perfilCilindro, P_in, g, R_nom, m_mater
     const W1 = W0 + delta_b;
     const half_W1 = W1 / 2;
     const half_W_canal_max = Math.max(...X_c);
-    const half_W1_efectivo = Math.min(half_W1, half_W_canal_max);
+    if (half_W1>=half_W_canal_max){
+        console.log("Desborda la canal")
+    }
+    let half_W_final=half_W1;
+
+
+    
 
     // 3. Reconstrucción geométrica del perfil de salida
     let X_out = [];
@@ -926,7 +936,6 @@ export function rotarSalidaAEntrada(perfilEntrada) {
     let max_Y = Math.max(...perfilEntrada.Y);
 
     // 2. Intercambio de ejes (Rotación 90°): 
-    // La antigua altura máxima pasa a ser la semianchura base, y el ancho pasa a ser la altura.
     let nuevo_half_W = max_Y; 
     let n_puntos = perfilEntrada.X.length;
 
@@ -937,7 +946,6 @@ export function rotarSalidaAEntrada(perfilEntrada) {
 
     let Y_rot = X_rot.map(x => {
         let xCorrespondiente = Math.min(max_X, x * factorEscalaArea);
-        // Buscar la altura equivalente interpolando el perfil original invertido
         let yInterp = interpolarY(perfilEntrada, max_X - xCorrespondiente);
         return Math.max(0, yInterp * (max_X / Math.max(1e-5, nuevo_half_W)));
     });
