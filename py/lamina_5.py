@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # ---------------------------------------------------------
 # IMPORTACIÓN DE MÓDULOS LOCALES (Carpeta py/)
 # ---------------------------------------------------------
-from py.calculos import calcularAreaDesdePuntos, simetria, aplicarLuz
+from calculos import calcularAreaDesdePuntos, simetria, aplicarLuz, obtener_altura_en_x, interpolarY, simetria, aplicar_luz
 from py.cilindros import (
     cilindro_AH, 
     cilindro_ovalo, 

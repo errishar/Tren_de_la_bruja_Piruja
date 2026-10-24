@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'py')))
 
 #_P_ Ahora puedes importarlos directamente:
-from calculos import calcularAreaDesdePuntos, simetria, aplicarLuz
+from calculos import calcularAreaDesdePuntos, simetria, aplicarLuz, obtener_altura_en_x, interpolarY, simetria, aplicar_luz
 from cilindros import cilindro_AH, cilindro_ovalo, cilindro_redondo, cilindro_C1, cilindro_RSM, relleno_palanquilla
 from calculo_laminaicion import rotarSalidaAEntrada, generarPerfilSalidaEkelundZheng2, generarPerfilSalidaShinokura3
 
@@ -24,31 +24,8 @@ st.set_page_config(page_title="Detalle de Canal - Simulación de Laminación", l
 
 n_puntos = 10  #_P_ Puntos por mm
 
-#_P_ ---------------------------------------------------------
-#_P_ FUNCIONES AUXILIARES DE CÁLCULO Y GEOMETRÍA
-#_P_ ---------------------------------------------------------
-def calcular_area_desde_puntos(x, y):
-    x_arr = np.array(x)
-    y_arr = np.array(y)
-    if len(x_arr) < 2:
-        return 0.0
-    trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-    return float(trapz_func(y_arr, x_arr) if trapz_func else np.sum((y_arr[:-1] + y_arr[1:]) * np.diff(x_arr) / 2))
 
-def simetria(perfil):
-    X = perfil["X"]
-    Y = perfil["Y"]
-    #_P_ Generar simetría en 4 cuadrantes para la gráfica
-    X_sup = [-x for x in reversed(X)] + list(X)
-    Y_sup = list(reversed(Y)) + list(Y)
-    return {"X_sup": X_sup, "Y_sup": Y_sup}
 
-def aplicar_luz(perfil, luz):
-    half_luz = luz / 2
-    return {
-        "X": perfil["X"],
-        "Y": [y + half_luz for y in perfil["Y"]]
-    }
 
 def relleno_palanquilla(ancho_total, n):
     half_w = ancho_total / 2

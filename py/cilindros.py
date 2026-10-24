@@ -8,10 +8,6 @@ from calculos import calcularAreaDesdePuntos, simetria, aplicarLuz
 
 
 
-
-
-
-
 def cilindro_AH(n, B, H, R, r, a_deg):
     factor = 0.25
     

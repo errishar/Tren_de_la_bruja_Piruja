@@ -4,11 +4,13 @@ import calculos as calc
 import sys
 import os
 
+
+
 #_P_ Agrega la carpeta 'py' al path de búsqueda de Python
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'py')))
 
 #_P_ Ahora puedes importarlos directamente:
-from calculos import calcularAreaDesdePuntos, simetria, aplicarLuz
+from calculos import calcularAreaDesdePuntos, simetria, aplicarLuz, obtener_altura_en_x, interpolarY
 from cilindros import cilindro_AH, cilindro_ovalo, cilindro_redondo, cilindro_C1, cilindro_RSM, relleno_palanquilla
 
 
@@ -31,26 +33,10 @@ def generar_perfil_salida_ekelund(perfil_cilindro, P_in, g, R_nom, mu=0.35, n_pu
     #_P_ 1. Cálculo automático de W0 y A0 reutilizando la función de área
     half_W0 = np.max(X_in)
     W0 = 2 * half_W0
-    
-    if calcular_area_desde_puntos is not None:
-        A0 = calcular_area_desde_puntos(X_in, Y_in)
-    else:
-        #_P_ Integración trapezoidal segura compatible con distintas versiones de NumPy
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        A0 = trapz_func(Y_in, X_in) if trapz_func else np.sum((Y_in[:-1] + Y_in[1:]) * np.diff(X_in) / 2)
 
-    #_P_ Función interna para consultar la altura de entrada interpolando los puntos
-    def obtener_altura_en(x):
-        x_abs = abs(x)
-        if x_abs > half_W0:
-            return 0.0
-        
-        for i in range(len(X_in) - 1):
-            if X_in[i] <= x_abs <= X_in[i + 1]:
-                t = (x_abs - X_in[i]) / (X_in[i + 1] - X_in[i])
-                return 2 * (Y_in[i] + t * (Y_in[i + 1] - Y_in[i]))
-        return 2 * Y_in[-1]
+    A0 = calcularAreaDesdePuntos(X_in, Y_in)
 
+   
     #_P_ 2. Generación de puntos de la diferencia (dh) para calcular el Ah total
     X_dh = []
     Y_dh = []
@@ -63,7 +49,7 @@ def generar_perfil_salida_ekelund(perfil_cilindro, P_in, g, R_nom, mu=0.35, n_pu
         if x > half_W0:
             break
 
-        H0_x = obtener_altura_en(x)
+        H0_x = obtener_altura_en_x(x, X_in, Y_in)
         Y_canal_total = 2 * Y_luz[i]
         dh = max(0.0, H0_x - Y_canal_total)
         
@@ -79,13 +65,9 @@ def generar_perfil_salida_ekelund(perfil_cilindro, P_in, g, R_nom, mu=0.35, n_pu
     X_dh = np.array(X_dh)
     Y_dh = np.array(Y_dh)
 
-    #_P_ Obtenemos el Ah total mediante integración trapezoidal
-    if calcular_area_desde_puntos is not None:
-        Ah = calcular_area_desde_puntos(X_dh, Y_dh)
-    else:
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        Ah = trapz_func(Y_dh, X_dh) if trapz_func else np.sum((Y_dh[:-1] + Y_dh[1:]) * np.diff(X_dh) / 2)
-
+    
+    Ah = calcularAreaDesdePuntos(X_dh, Y_dh)
+    
     #_P_ 3. Aplicación del Modelo de Ekelund Modificado para el ensanchamiento (delta_b)
     H0_eq = A0 / W0 if W0 > 0 else 0
     dH_eq = Ah / W0 if W0 > 0 else 0
@@ -133,18 +115,14 @@ def generar_perfil_salida_ekelund(perfil_cilindro, P_in, g, R_nom, mu=0.35, n_pu
             X_out.append(x)
             Y_out.append(y)
 
-    #_P_ Función equivalente al trunc(x, 2) de JavaScript
-    def trunc_2(val):
-        return math.trunc(val * 100) / 100
-
-    X_out = [trunc_2(x) for x in X_out]
-    Y_out = [trunc_2(y) for y in Y_out]
-
-    #_P_ Devuelve estrictamente el diccionario {X, Y} del primer cuadrante
+   #_P_ Redondeo limpio a 2 decimales para los puntos de salida
+    X_out = [round(x, 2) for x in X_out]
+    Y_out = [round(y, 2) for y in Y_out]
     return {
         "X": X_out,
         "Y": Y_out
     }
+   
 
 
 def calcular_spread_zheng_iterativo(W0, H0, A0, Ah, R_nom, m_material=1.28, maxIter=5):
@@ -215,24 +193,10 @@ def generar_perfil_salida_ekelund(perfil_cilindro, P_in, g, R_nom, mu=0.35, n_pu
     half_W0 = np.max(X_in)
     W0 = 2 * half_W0
     
-    if calcular_area_desde_puntos is not None:
-        A0 = calcular_area_desde_puntos(X_in, Y_in)
-    else:
-        #_P_ Integración trapezoidal segura compatible con distintas versiones de NumPy
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        A0 = trapz_func(Y_in, X_in) if trapz_func else np.sum((Y_in[:-1] + Y_in[1:]) * np.diff(X_in) / 2)
-
-    #_P_ Función interna para consultar la altura de entrada interpolando los puntos
-    def obtener_altura_en(x):
-        x_abs = abs(x)
-        if x_abs > half_W0:
-            return 0.0
-        
-        for i in range(len(X_in) - 1):
-            if X_in[i] <= x_abs <= X_in[i + 1]:
-                t = (x_abs - X_in[i]) / (X_in[i + 1] - X_in[i])
-                return 2 * (Y_in[i] + t * (Y_in[i + 1] - Y_in[i]))
-        return 2 * Y_in[-1]
+    
+    A0 = calcularAreaDesdePuntoss(X_in, Y_in)
+    
+    
 
     #_P_ 2. Generación de puntos de la diferencia (dh) para calcular el Ah total
     X_dh = []
@@ -246,7 +210,7 @@ def generar_perfil_salida_ekelund(perfil_cilindro, P_in, g, R_nom, mu=0.35, n_pu
         if x > half_W0:
             break
 
-        H0_x = obtener_altura_en(x)
+        H0_x = obtener_altura_en_x(x)
         Y_canal_total = 2 * Y_luz[i]
         dh = max(0.0, H0_x - Y_canal_total)
         
@@ -263,12 +227,9 @@ def generar_perfil_salida_ekelund(perfil_cilindro, P_in, g, R_nom, mu=0.35, n_pu
     Y_dh = np.array(Y_dh)
 
     #_P_ Obtenemos el Ah total mediante integración trapezoidal
-    if calcular_area_desde_puntos is not None:
-        Ah = calcular_area_desde_puntos(X_dh, Y_dh)
-    else:
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        Ah = trapz_func(Y_dh, X_dh) if trapz_func else np.sum((Y_dh[:-1] + Y_dh[1:]) * np.diff(X_dh) / 2)
-
+    
+    Ah = calcularAreaDesdePuntos(X_dh, Y_dh)
+    
     #_P_ 3. Aplicación del Modelo de Ekelund Modificado para el ensanchamiento (delta_b)
     H0_eq = A0 / W0 if W0 > 0 else 0
     dH_eq = Ah / W0 if W0 > 0 else 0
@@ -316,13 +277,9 @@ def generar_perfil_salida_ekelund(perfil_cilindro, P_in, g, R_nom, mu=0.35, n_pu
             X_out.append(x)
             Y_out.append(y)
 
-    #_P_ Función equivalente al trunc(x, 2) de JavaScript
-    def trunc_2(val):
-        return math.trunc(val * 100) / 100
-
-    X_out = [trunc_2(x) for x in X_out]
-    Y_out = [trunc_2(y) for y in Y_out]
-
+    #_P_ Redondeo limpio a 2 decimales para los puntos de salida
+    X_out = [round(x, 2) for x in X_out]
+    Y_out = [round(y, 2) for y in Y_out]
     #_P_ Devuelve estrictamente el diccionario {X, Y} del primer cuadrante
     return {
         "X": X_out,
@@ -398,23 +355,10 @@ def generar_perfil_salida_ekelund_zheng_2(perfil_cilindro, P_in, g, R_nom, mu=0.
     half_W0 = np.max(X_in)
     W0 = 2 * half_W0
     
-    if calcular_area_desde_puntos is not None:
-        A0 = calcular_area_desde_puntos(X_in, Y_in)
-    else:
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        A0 = trapz_func(Y_in, X_in) if trapz_func else np.sum((Y_in[:-1] + Y_in[1:]) * np.diff(X_in) / 2)
+    
+    A0 = calcularAreaDesdePuntos(Y_in, X_in) 
 
-    #_P_ Función interna para consultar la altura de entrada
-    def obtener_altura_en(x):
-        x_abs = abs(x)
-        if x_abs > half_W0:
-            return 0.0
-        for i in range(len(X_in) - 1):
-            if X_in[i] <= x_abs <= X_in[i + 1]:
-                t = (x_abs - X_in[i]) / (X_in[i + 1] - X_in[i])
-                return 2 * (Y_in[i] + t * (Y_in[i + 1] - Y_in[i]))
-        return 2 * Y_in[-1]
-
+    
     #_P_ 2. Cálculo de la reducción de área (Ah)
     y_c_suma = 0.0
     n_contacto = 0
@@ -426,7 +370,7 @@ def generar_perfil_salida_ekelund_zheng_2(perfil_cilindro, P_in, g, R_nom, mu=0.
         if x > half_W0:
             break
         
-        H0_x = obtener_altura_en(x)
+        H0_x = obtener_altura_en_x(x, X_in, Y_in)
         Y_canal_total = 2 * Y_luz[i]
         dh = max(0.0, H0_x - Y_canal_total)
         
@@ -467,21 +411,7 @@ def generar_perfil_salida_ekelund_zheng_2(perfil_cilindro, P_in, g, R_nom, mu=0.
     
     half_W1 = min(half_W1_calculado, half_W_canal_max)
 
-    #_P_ Función auxiliar por defecto para interpolar Y si no se provee externamente
-    def default_interpolar_y(perfil, x_val):
-        xs = perfil["X"]
-        ys = perfil["Y"]
-        if x_val <= xs[0]:
-            return ys[0]
-        if x_val >= xs[-1]:
-            return ys[-1]
-        for i in range(len(xs) - 1):
-            if xs[i] <= x_val <= xs[i + 1]:
-                t = (x_val - xs[i]) / (xs[i + 1] - xs[i])
-                return ys[i] + t * (ys[i + 1] - ys[i])
-        return ys[-1]
-
-    interpolar_y = interpolar_y_func if interpolar_y_func is not None else default_interpolar_y
+   
 
     #_P_ 5. Construcción de la matriz de puntos de salida
     X_out = []
@@ -506,19 +436,16 @@ def generar_perfil_salida_ekelund_zheng_2(perfil_cilindro, P_in, g, R_nom, mu=0.
             y_parabola = y_cont - (y_cont - half_g) * (t ** 2)
             
             #_P_ Recorte contra el perfil del canal
-            y_canal_max = interpolar_y({"X": X_c, "Y": Y_luz}, x)
+            y_canal_max = interpolarY({"X": X_c, "Y": Y_luz}, x)
             y_final = min(y_parabola, y_canal_max)
             y_final = max(half_g, y_final)  #_P_ Evitar bajar de la luz
 
             X_out.append(x)
             Y_out.append(y_final)
 
-    def trunc_2(val):
-        return math.trunc(val * 100) / 100
-
-    X_out = [trunc_2(x) for x in X_out]
-    Y_out = [trunc_2(y) for y in Y_out]
-
+    #_P_ Redondeo limpio a 2 decimales para los puntos de salida
+    X_out = [round(x, 2) for x in X_out]
+    Y_out = [round(y, 2) for y in Y_out]
     return {
         "X": X_out,
         "Y": Y_out
@@ -542,12 +469,10 @@ def generar_perfil_salida_shinokura_3(perfil_cilindro, P_in, g, R_nom, alpha=0.8
     half_W0 = np.max(X_in)
     W0 = 2 * half_W0
     
-    if calcular_area_desde_puntos is not None:
-        A0 = calcular_area_desde_puntos(X_in, Y_in)
-    else:
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        A0 = trapz_func(Y_in, X_in) if trapz_func else np.sum((Y_in[:-1] + Y_in[1:]) * np.diff(X_in) / 2)
+    
+    A0 = calcularAreaDesdePuntos(X_in, Y_in)
 
+    
     #_P_ 2. Cálculo de dimensiones equivalentes (Alturas medias)
     H0_media = A0 / W0 if W0 > 0 else 0  #_P_ Altura media geométrica del material de entrada
     H_rodillo_max = 2 * np.max(Y_c) if len(Y_c) > 0 else 0  #_P_ Altura máxima del hueco del rodillo
@@ -596,22 +521,7 @@ def generar_perfil_salida_shinokura_3(perfil_cilindro, P_in, g, R_nom, alpha=0.8
     x_cont = X_out[-1] if len(X_out) > 0 else 0
     y_cont = Y_out[-1] if len(Y_out) > 0 else half_g
 
-    #_P_ Función auxiliar por defecto para interpolar Y si no se provee externamente
-    def default_interpolar_y(perfil, x_val):
-        xs = perfil["X"]
-        ys = perfil["Y"]
-        if x_val <= xs[0]:
-            return ys[0]
-        if x_val >= xs[-1]:
-            return ys[-1]
-        for i in range(len(xs) - 1):
-            if xs[i] <= x_val <= xs[i + 1]:
-                t = (x_val - xs[i]) / (xs[i + 1] - xs[i])
-                return ys[i] + t * (ys[i + 1] - ys[i])
-        return ys[-1]
-
-    interpolar_y = interpolar_y_func if interpolar_y_func is not None else default_interpolar_y
-
+    
     #_P_ --- Zona Libre / Abombamiento Lateral (Free Surface Bulging) ---
     if half_W1_efectivo > x_cont:
         dx_libre = (half_W1_efectivo - x_cont) / n_puntos_libre
@@ -624,7 +534,7 @@ def generar_perfil_salida_shinokura_3(perfil_cilindro, P_in, g, R_nom, alpha=0.8
             y_parabola = y_cont - (y_cont - half_g) * (t ** 2)
             
             #_P_ Altura del rodillo en ese punto X (usando interpolación segura)
-            y_canal_max = interpolar_y({"X": X_c, "Y": Y_luz}, x)
+            y_canal_max = interpolarY({"X": X_c, "Y": Y_luz}, x)
 
             #_P_ Si el acero intenta salirse del rodillo, se ciñe a él (no lo atraviesa)
             y_final = min(y_parabola, y_canal_max)
@@ -633,12 +543,9 @@ def generar_perfil_salida_shinokura_3(perfil_cilindro, P_in, g, R_nom, alpha=0.8
             X_out.append(x)
             Y_out.append(y_final)
 
-    def trunc_2(val):
-        return math.trunc(val * 100) / 100
-
-    X_out = [trunc_2(x) for x in X_out]
-    Y_out = [trunc_2(y) for y in Y_out]        
-
+    #_P_ Redondeo limpio a 2 decimales para los puntos de salida
+    X_out = [round(x, 2) for x in X_out]
+    Y_out = [round(y, 2) for y in Y_out]
     return {
         "X": X_out,
         "Y": Y_out
@@ -663,23 +570,10 @@ def generar_perfil_salida_shinokura_2(perfil_cilindro, P_in, g, R_nom, alpha=0.8
     half_W0 = np.max(X_in)
     W0 = 2 * half_W0
     
-    if calcular_area_desde_puntos is not None:
-        A0 = calcular_area_desde_puntos(X_in, Y_in)
-    else:
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        A0 = trapz_func(Y_in, X_in) if trapz_func else np.sum((Y_in[:-1] + Y_in[1:]) * np.diff(X_in) / 2)
+    
+    A0 = calcularAreaDesdePuntos(Y_in, X_in)
 
-    #_P_ Función interna para consultar la altura de entrada interpolando los puntos
-    def obtener_altura_en(x):
-        x_abs = abs(x)
-        if x_abs > half_W0:
-            return 0.0
-        
-        for i in range(len(X_in) - 1):
-            if X_in[i] <= x_abs <= X_in[i + 1]:
-                t = (x_abs - X_in[i]) / (X_in[i + 1] - X_in[i])
-                return 2 * (Y_in[i] + t * (Y_in[i + 1] - Y_in[i]))
-        return 2 * Y_in[-1]
+    
 
     #_P_ 2. Generación de puntos de la diferencia (dh) para calcular el Ah total de forma modular
     X_dh = []
@@ -693,7 +587,7 @@ def generar_perfil_salida_shinokura_2(perfil_cilindro, P_in, g, R_nom, alpha=0.8
         if x > half_W0:
             break
 
-        H0_x = obtener_altura_en(x)
+        H0_x = obtener_altura_en_x(x, X_in, Y_in)
         Y_canal_total = 2 * Y_luz[i]
         dh = max(0.0, H0_x - Y_canal_total)
         
@@ -709,13 +603,8 @@ def generar_perfil_salida_shinokura_2(perfil_cilindro, P_in, g, R_nom, alpha=0.8
     X_dh = np.array(X_dh)
     Y_dh = np.array(Y_dh)
 
-    #_P_ Obtenemos el Ah total mediante la integración trapezoidal reutilizada
-    if calcular_area_desde_puntos is not None:
-        Ah = calcular_area_desde_puntos(X_dh, Y_dh)
-    else:
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        Ah = trapz_func(Y_dh, X_dh) if trapz_func else np.sum((Y_dh[:-1] + Y_dh[1:]) * np.diff(X_dh) / 2)
-
+    Ah = calcularAreaDesdePuntos(X_dh, Y_dh)
+    
     #_P_ ================== Hasta aquí común ambos modelos ==================
 
     #_P_ 3. Aplicación del Modelo de Shinokura y Takai para el ensanchamiento
@@ -746,22 +635,8 @@ def generar_perfil_salida_shinokura_2(perfil_cilindro, P_in, g, R_nom, alpha=0.8
     x_cont = X_out[-1] if len(X_out) > 0 else 0
     y_cont = Y_out[-1] if len(Y_out) > 0 else half_g
 
-    #_P_ Función auxiliar por defecto para interpolar Y si no se provee externamente
-    def default_interpolar_y(perfil, x_val):
-        xs = perfil["X"]
-        ys = perfil["Y"]
-        if x_val <= xs[0]:
-            return ys[0]
-        if x_val >= xs[-1]:
-            return ys[-1]
-        for i in range(len(xs) - 1):
-            if xs[i] <= x_val <= xs[i + 1]:
-                t = (x_val - xs[i]) / (xs[i + 1] - xs[i])
-                return ys[i] + t * (ys[i + 1] - ys[i])
-        return ys[-1]
 
-    interpolar_y = interpolar_y_func if interpolar_y_func is not None else default_interpolar_y
-
+    
     #_P_ --- Zona Libre / Abombamiento Lateral (Free Surface Bulging) ---
     if half_W1_efectivo > x_cont:
         dx_libre = (half_W1_efectivo - x_cont) / n_puntos_libre
@@ -774,7 +649,7 @@ def generar_perfil_salida_shinokura_2(perfil_cilindro, P_in, g, R_nom, alpha=0.8
             y_parabola = y_cont - (y_cont - half_g) * (t ** 2)
             
             #_P_ Altura máxima del rodillo permitida en ese punto X
-            y_canal_max = interpolar_y({"X": X_c, "Y": Y_luz}, x)
+            y_canal_max = interpolarY({"X": X_c, "Y": Y_luz}, x)
             
             #_P_ Restricción para que no atraviese el perfil del rodillo ni baje de la luz
             y_final = min(y_parabola, y_canal_max)
@@ -783,11 +658,9 @@ def generar_perfil_salida_shinokura_2(perfil_cilindro, P_in, g, R_nom, alpha=0.8
             X_out.append(x)
             Y_out.append(y_final)
 
-    def trunc_2(val):
-        return math.trunc(val * 100) / 100
-
-    X_out = [trunc_2(x) for x in X_out]
-    Y_out = [trunc_2(y) for y in Y_out]        
+    #_P_ Redondeo limpio a 2 decimales para los puntos de salida
+    X_out = [round(x, 2) for x in X_out]
+    Y_out = [round(y, 2) for y in Y_out]      
 
     #_P_ Devuelve estrictamente y únicamente el perfil laminado { X, Y } del primer cuadrante
     return {
@@ -814,34 +687,8 @@ def generar_perfil_salida_shinokura(perfil_cilindro, P_in, g, R_nom, alpha=0.85,
     half_W0 = np.max(X_in)
     W0 = 2 * half_W0
     
-    if calcular_area_desde_puntos is not None:
-        A0 = calcular_area_desde_puntos(X_in, Y_in)
-    else:
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        A0 = trapz_func(Y_in, X_in) if trapz_func else np.sum((Y_in[:-1] + Y_in[1:]) * np.diff(X_in) / 2)
-
-    #_P_ Función auxiliar por defecto para interpolar Y si no se provee externamente
-    def default_interpolar_y(perfil, x_val):
-        xs = perfil["X"]
-        ys = perfil["Y"]
-        if x_val <= xs[0]:
-            return ys[0]
-        if x_val >= xs[-1]:
-            return ys[-1]
-        for i in range(len(xs) - 1):
-            if xs[i] <= x_val <= xs[i + 1]:
-                t = (x_val - xs[i]) / (xs[i + 1] - xs[i])
-                return ys[i] + t * (ys[i + 1] - ys[i])
-        return ys[-1]
-
-    interpolar_y = interpolar_y_func if interpolar_y_func is not None else default_interpolar_y
-
-    #_P_ Función interna para consultar la altura de entrada usando interpolar_y con objeto
-    def obtener_altura_en(x):
-        x_abs = abs(x)
-        if x_abs > half_W0:
-            return 0.0
-        return 2 * interpolar_y({"X": X_in, "Y": Y_in}, x_abs)
+    A0 = calcularAreaDesdePuntos(X_in, Y_in)
+    
 
     #_P_ 2. Generación de puntos de la diferencia (dh) para calcular el Ah total
     X_dh = []
@@ -855,7 +702,7 @@ def generar_perfil_salida_shinokura(perfil_cilindro, P_in, g, R_nom, alpha=0.85,
         if x > half_W0:
             break
 
-        H0_x = obtener_altura_en(x)
+        H0_x = obtener_altura_en_x(x, X_in, Y_in)
         Y_canal_total = 2 * Y_luz[i]
         dh = max(0.0, H0_x - Y_canal_total)
         
@@ -916,7 +763,7 @@ def generar_perfil_salida_shinokura(perfil_cilindro, P_in, g, R_nom, alpha=0.85,
             y_parabola = y_cont - (y_cont - half_g) * (t ** 2)
 
             #_P_ Interpolación de la altura máxima permitida por la canal en este punto x
-            y_canal_max = interpolar_y({"X": X_c, "Y": Y_luz}, x)
+            y_canal_max = interpolarY({"X": X_c, "Y": Y_luz}, x)
 
             #_P_ RESTRICCIÓN FÍSICA: La altura nunca puede rebasar el perfil del rodillo
             y_final = min(y_parabola, y_canal_max)
@@ -925,12 +772,9 @@ def generar_perfil_salida_shinokura(perfil_cilindro, P_in, g, R_nom, alpha=0.85,
             X_out.append(x)
             Y_out.append(y_final)
 
-    #_P_ Truncamiento a 2 decimales coherente con el resto del proyecto
-    def trunc_2(val):
-        return math.trunc(val * 100) / 100
-
-    X_out = [trunc_2(x) for x in X_out]
-    Y_out = [trunc_2(y) for y in Y_out]
+   #_P_ Redondeo limpio a 2 decimales para los puntos de salida
+    X_out = [round(x, 2) for x in X_out]
+    Y_out = [round(y, 2) for y in Y_out]      
 
     #_P_ Devuelve estrictamente y únicamente el perfil laminado { X, Y } del primer cuadrante
     return {
@@ -956,25 +800,13 @@ def generar_perfil_salida_zheng(perfil_cilindro, P_in, g, R_nom, m_material=1.25
     half_W0 = np.max(X_in)
     W0 = 2 * half_W0
     
-    if calcular_area_desde_puntos is not None:
-        A0 = calcular_area_desde_puntos(X_in, Y_in)
-    else:
-        trapz_func = getattr(np, 'trapezoid', getattr(np, 'trapz', None))
-        A0 = trapz_func(Y_in, X_in) if trapz_func else np.sum((Y_in[:-1] + Y_in[1:]) * np.diff(X_in) / 2)
+    
+        
+    A0 = calcularAreaDesdePuntos(Y_in, X_in)
         
     H0 = np.max(Y_in) * 2
 
-    #_P_ Función interna para consultar la altura de entrada
-    def obtener_altura_en(x):
-        x_abs = abs(x)
-        if x_abs > half_W0:
-            return 0.0
-        for i in range(len(X_in) - 1):
-            if X_in[i] <= x_abs <= X_in[i + 1]:
-                t = (x_abs - X_in[i]) / (X_in[i + 1] - X_in[i])
-                return 2 * (Y_in[i] + t * (Y_in[i + 1] - Y_in[i]))
-        return 2 * Y_in[-1]
-
+    
     #_P_ 1. Integración numérica inicial para hallar Ah
     Ah = 0.0
     y_c_suma = 0.0
@@ -985,7 +817,7 @@ def generar_perfil_salida_zheng(perfil_cilindro, P_in, g, R_nom, m_material=1.25
         x = X_c[i]
         if x > half_W0:
             break
-        H0_x = obtener_altura_en(x)
+        H0_x = obtener_altura_en_x(x, X_in, Y_in)
         Y_canal_total = 2 * Y_luz[i]
         dh = max(0.0, H0_x - Y_canal_total)
         if i > 0:
@@ -1019,22 +851,7 @@ def generar_perfil_salida_zheng(perfil_cilindro, P_in, g, R_nom, m_material=1.25
     half_W_canal_max = np.max(X_c) if len(X_c) > 0 else 0
     half_W1_efectivo = min(half_W1, half_W_canal_max)
 
-    #_P_ Función auxiliar por defecto para interpolar Y si no se provee externamente
-    def default_interpolar_y(perfil, x_val):
-        xs = perfil["X"]
-        ys = perfil["Y"]
-        if x_val <= xs[0]:
-            return ys[0]
-        if x_val >= xs[-1]:
-            return ys[-1]
-        for i in range(len(xs) - 1):
-            if xs[i] <= x_val <= xs[i + 1]:
-                t = (x_val - xs[i]) / (xs[i + 1] - xs[i])
-                return ys[i] + t * (ys[i + 1] - ys[i])
-        return ys[-1]
-
-    interpolar_y = interpolar_y_func if interpolar_y_func is not None else default_interpolar_y
-
+    
     #_P_ 3. Reconstrucción geométrica del perfil de salida
     X_out = []
     Y_out = []
@@ -1053,7 +870,7 @@ def generar_perfil_salida_zheng(perfil_cilindro, P_in, g, R_nom, m_material=1.25
             x = x_cont + i * dx_libre
             t = (x - x_cont) / (half_W1_efectivo - x_cont)
             y_parabola = y_cont - (y_cont - half_g) * (t ** 2)
-            y_canal_max = interpolar_y({"X": X_c, "Y": Y_luz}, x)
+            y_canal_max = interpolar_Y({"X": X_c, "Y": Y_luz}, x)
 
             y_final = min(y_parabola, y_canal_max)
             y_final = max(half_g, y_final)
@@ -1061,14 +878,14 @@ def generar_perfil_salida_zheng(perfil_cilindro, P_in, g, R_nom, m_material=1.25
             X_out.append(x)
             Y_out.append(y_final)
 
-    def trunc_2(val):
-        return math.trunc(val * 100) / 100
-
+    #_P_ Redondeo limpio a 2 decimales para los puntos de salida
+    X_out = [round(x, 2) for x in X_out]
+    Y_out = [round(y, 2) for y in Y_out]      
     return {
-        "X": [trunc_2(v) for v in X_out],
-        "Y": [trunc_2(v) for v in Y_out]
-    }
-
+            "X": X_out,
+            "Y": Y_out
+        }
+    
 
 def rotar_salida_a_entrada(salida_anterior):
     """
@@ -1102,8 +919,8 @@ def rotar_salida_a_entrada(salida_anterior):
             puntos_unicos.append(p)
 
     return {
-        "X": [p["x"] for p in puntos_unicos],
-        "Y": [p["y"] for p in puntos_unicos]
+    "X": [p["x"] for p in puntos_unicos],
+    "Y": [p["y"] for p in puntos_unicos]
     }
 
 
@@ -1128,17 +945,7 @@ def generar_perfil_salida_tafel_sedlaczek(perfil_cilindro, P_in, g, R_nom, n_pun
     H0 = 2 * np.max(Y_in) if len(Y_in) > 0 else 0
     Hout = g  #_P_ Espesor de salida de referencia en la luz
 
-    #_P_ Función interna para consultar la altura de entrada interpolando los puntos
-    def obtener_altura_en(x):
-        x_abs = abs(x)
-        if x_abs > half_W0:
-            return 0.0
-        
-        for i in range(len(X_in) - 1):
-            if X_in[i] <= x_abs <= X_in[i + 1]:
-                t = (x_abs - X_in[i]) / (X_in[i + 1] - X_in[i])
-                return 2 * (Y_in[i] + t * (Y_in[i + 1] - Y_in[i]))
-        return 2 * Y_in[-1] if len(Y_in) > 0 else 0.0
+    
 
     #_P_ 2. Integración numérica para hallar el área reducida (Ah) y detectar contacto
     Ah_cuadrante = 0.0
@@ -1151,7 +958,7 @@ def generar_perfil_salida_tafel_sedlaczek(perfil_cilindro, P_in, g, R_nom, n_pun
         if x > half_W0:
             break
 
-        H0_x = obtener_altura_en(x)
+        H0_x = obtener_altura_en_x(x, X_in, Y_in)
         Y_canal_total = 2 * Y_luz[i]
         dh = max(0.0, H0_x - Y_canal_total)
         
@@ -1204,14 +1011,9 @@ def generar_perfil_salida_tafel_sedlaczek(perfil_cilindro, P_in, g, R_nom, n_pun
             X_out.append(x)
             Y_out.append(y)
     
-    #_P_ Función de truncamiento a 2 decimales coherente con el proyecto
-    def trunc_2(val):
-        return math.trunc(val * 100) / 100
-
-    X_out = [trunc_2(x) for x in X_out]
-    Y_out = [trunc_2(y) for y in Y_out]
-
-    #_P_ Devuelve estrictamente el objeto { X, Y } del primer cuadrante para la siguiente etapa
+    #_P_ Redondeo limpio a 2 decimales para los puntos de salida
+    X_out = [round(x, 2) for x in X_out]
+    Y_out = [round(y, 2) for y in Y_out]      
     return {
         "X": X_out,
         "Y": Y_out
@@ -1239,17 +1041,7 @@ def generar_perfil_salida_koncevicz(perfil_cilindro, P_in, g, R_nom, n_puntos_li
     H0 = 2 * np.max(Y_in) if len(Y_in) > 0 else 0
     Hout = g  #_P_ Espesor de salida de referencia en la luz
 
-    #_P_ Función interna para consultar la altura de entrada interpolando los puntos
-    def obtener_altura_en(x):
-        x_abs = abs(x)
-        if x_abs > half_W0:
-            return 0.0
-        
-        for i in range(len(X_in) - 1):
-            if X_in[i] <= x_abs <= X_in[i + 1]:
-                t = (x_abs - X_in[i]) / (X_in[i + 1] - X_in[i])
-                return 2 * (Y_in[i] + t * (Y_in[i + 1] - Y_in[i]))
-        return 2 * Y_in[-1] if len(Y_in) > 0 else 0.0
+    
 
     #_P_ 2. Integración numérica para hallar el área reducida (Ah) y detectar contacto
     Ah_cuadrante = 0.0
@@ -1262,7 +1054,7 @@ def generar_perfil_salida_koncevicz(perfil_cilindro, P_in, g, R_nom, n_puntos_li
         if x > half_W0:
             break
 
-        H0_x = obtener_altura_en(x)
+        H0_x = obtener_altura_en_x(x, X_in, Y_in)
         Y_canal_total = 2 * Y_luz[i]
         dh = max(0.0, H0_x - Y_canal_total)
         
@@ -1315,18 +1107,13 @@ def generar_perfil_salida_koncevicz(perfil_cilindro, P_in, g, R_nom, n_puntos_li
             X_out.append(x)
             Y_out.append(y)
 
-    #_P_ Función de truncamiento a 2 decimales coherente con el proyecto
-    def trunc_2(val):
-        return math.trunc(val * 100) / 100
-
-    X_out = [trunc_2(x) for x in X_out]
-    Y_out = [trunc_2(y) for y in Y_out]
-
-    #_P_ Devuelve estrictamente el objeto { X, Y } del primer cuadrante listo para la rotación de 90°
+    #_P_ Redondeo limpio a 2 decimales para los puntos de salida
+    X_out = [round(x, 2) for x in X_out]
+    Y_out = [round(y, 2) for y in Y_out]      
     return {
         "X": X_out,
         "Y": Y_out
-    }
+}
 
 
 

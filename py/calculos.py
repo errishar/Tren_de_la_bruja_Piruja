@@ -235,3 +235,31 @@ def crearFuncionAltura(X_in, Y_in):
 
     #_P_ Retornamos la función para poder usarla más tarde
     return funcion_altura
+
+
+def obtener_altura_en_x(x, X_in, Y_in):
+        x_abs = abs(x)
+        if x_abs > half_W0:
+            return 0.0
+        
+        for i in range(len(X_in) - 1):
+            if X_in[i] <= x_abs <= X_in[i + 1]:
+                t = (x_abs - X_in[i]) / (X_in[i + 1] - X_in[i])
+                return 2 * (Y_in[i] + t * (Y_in[i + 1] - Y_in[i]))
+        return 2 * Y_in[-1]
+
+
+def simetria(perfil):
+    X = perfil["X"]
+    Y = perfil["Y"]
+    #_P_ Generar simetría en 4 cuadrantes para la gráfica
+    X_sup = [-x for x in reversed(X)] + list(X)
+    Y_sup = list(reversed(Y)) + list(Y)
+    return {"X_sup": X_sup, "Y_sup": Y_sup}
+
+def aplicar_luz(perfil, luz):
+    half_luz = luz / 2
+    return {
+        "X": perfil["X"],
+        "Y": [y + half_luz for y in perfil["Y"]]
+    }
